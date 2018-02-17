@@ -1,6 +1,7 @@
 # VDManager
 
 Virtual Desktop Manager
+
 Bind some keyboard keys to manage the virtual desktops on Windows 10.
 
 * Toggle the app status with [inser] key.
