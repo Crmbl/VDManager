@@ -1,0 +1,100 @@
+﻿<Window x:Class="VDManager.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Style="{StaticResource WindowStyle}"
+        MouseDown="WindowMouseDown"
+        MouseEnter="WindowMouseEnter"
+        MouseUp="WindowMouseUp"
+        MouseDoubleClick="WindowMouseDouble">
+    <Window.Background>
+        <ImageBrush ImageSource="{StaticResource Background}" />
+    </Window.Background>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="6"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="2" x:Name="Version" Text="{Binding Version}" 
+                   Style="{StaticResource VersionTextBlockStyle}"/>
+
+        <Grid Grid.Row="4" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="2"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="80" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="WelcomeMessage" Text="{Binding WelcomeMessage}" 
+                       Style="{StaticResource SpeedTextBlockStyle}" />
+
+            <TextBlock Grid.Row="1" Grid.Column="1"
+                       x:Name="AppStatus" 
+                       Text="{Binding AppStatus, NotifyOnTargetUpdated=True}" 
+                       TargetUpdated="ApplicationStatusTargetUpdated" >
+                <TextBlock.Style>
+                    <Style>
+                        <Setter Property="TextBlock.FontWeight" Value="Bold" />
+                        <Setter Property="TextBlock.FontSize" Value="16" />
+                        <Setter Property="TextBlock.FontFamily" Value="Consolas" />
+                        <Setter Property="TextBlock.Padding" Value="2" />
+                        <Setter Property="TextBlock.Width" Value="Auto" />
+                        <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                        <Setter Property="TextBlock.Margin" Value="0, 0, 0, 5" />
+                        <Setter Property="TextBlock.HorizontalAlignment" Value="Center" />
+                        <Setter Property="TextBlock.VerticalAlignment" Value="Center" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AppStatus}" Value="RUNNING">
+                                <Setter Property="TextBlock.Foreground" Value="#55efc4" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding AppStatus}" Value="STOPPED">
+                                <Setter Property="TextBlock.Foreground" Value="#ee5253" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+                <!--<TextBlock.Effect>
+                    <DropShadowEffect BlurRadius="1" Color="Black" Opacity="1" ShadowDepth="1" />
+                </TextBlock.Effect>-->
+            </TextBlock>
+
+            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="InfoStop" Text="{Binding InfoStop}" 
+                       Style="{StaticResource DefaultTextBlockStyle}"/>
+
+            <CheckBox Grid.Row="5" Grid.Column="1" x:Name="UseArrows" IsChecked="{Binding UseArrows}"
+                      Style="{StaticResource CheckboxStyle}"
+                      Content="Use arrow keys" />
+
+            <CheckBox Grid.Row="6" Grid.Column="1" x:Name="UseFKeys" IsChecked="{Binding UseFKeys}"
+                      Style="{StaticResource CheckboxStyle}"
+                      Content="Use F keys" />
+
+            <CheckBox Grid.Row="7" Grid.Column="1" x:Name="UseNumpad" IsChecked="{Binding UseNumPad}"
+                      Style="{StaticResource CheckboxStyle}"
+                      Content="Use numpad keys" />
+
+            <Button Grid.Row="9" Grid.Column="1" Command="{Binding ExitCommand}" Content="Exit" Style="{StaticResource DefaultButtonStyle}" />
+        </Grid>
+    </Grid>
+</Window>
