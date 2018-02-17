@@ -10,4 +10,6 @@ Bind some keyboard keys to manage the virtual desktops on Windows 10.
 
 Click on app to drag it, double click to minimize in system tray.
 
+![screenshot vdmanager](https://raw.github.com/Crmbl/VDManager/blob/master/vdscreen.PNG)
+
 Small app I made to train myself, no serious stuff here :)
