@@ -183,10 +183,14 @@
     <Resource Include="vd.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\starfish.ico" />
+    <Resource Include="Resources\Images\watermelon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\watermelon.ico" />
+    <Resource Include="Resources\Images\peach.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".gitattributes" />
+    <Content Include=".gitignore" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

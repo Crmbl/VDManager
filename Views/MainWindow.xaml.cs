@@ -50,7 +50,7 @@ namespace VDManager.Views
 	    /// <summary>
 	    /// Ref to the icon.
 	    /// </summary>
-	    private readonly Uri _iconOff = new Uri("pack://application:,,,/Resources/Images/starfish.ico");
+	    private readonly Uri _iconOff = new Uri("pack://application:,,,/Resources/Images/peach.ico");
 
 		#endregion // Constants
 
