@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
-using WindowsDesktop;
+using VirtualDesktop;
 
 namespace VDManager.Utils
 {
@@ -22,15 +22,15 @@ namespace VDManager.Utils
 		/// <summary>
 		/// Returns a virtual desktop that window is located.
 		/// </summary>
-		public static VirtualDesktop GetCurrentDesktop(this Window window)
+		public static VirtualDesktop.VirtualDesktop GetCurrentDesktop(this Window window)
 		{
-			return VirtualDesktop.FromHwnd(window.GetHandle());
+			return VirtualDesktop.VirtualDesktop.FromHwnd(window.GetHandle());
 		}
 
 		/// <summary>
 		/// Move this window to specified virtual desktop.
 		/// </summary>
-		public static void MoveToDesktop(this Window window, VirtualDesktop virtualDesktop)
+		public static void MoveToDesktop(this Window window, VirtualDesktop.VirtualDesktop virtualDesktop)
 		{
 			VirtualDesktopHelper.MoveToDesktop(window.GetHandle(), virtualDesktop);
 		}
@@ -38,7 +38,7 @@ namespace VDManager.Utils
 		/// <summary>
 		/// Switch to virtual desktop and move the window.
 		/// </summary>
-		public static void SwitchAndMove(this VirtualDesktop virtualDesktop, Window window)
+		public static void SwitchAndMove(this VirtualDesktop.VirtualDesktop virtualDesktop, Window window)
 		{
 			window.MoveToDesktop(virtualDesktop);
 			virtualDesktop.Switch();
@@ -49,7 +49,7 @@ namespace VDManager.Utils
 		/// </summary>
 		public static bool IsPinned(this Window window)
 		{
-			return VirtualDesktop.IsPinnedWindow(window.GetHandle());
+			return VirtualDesktop.VirtualDesktop.IsPinnedWindow(window.GetHandle());
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace VDManager.Utils
 		/// </summary>
 		public static void Pin(this Window window)
 		{
-			VirtualDesktop.PinWindow(window.GetHandle());
+			VirtualDesktop.VirtualDesktop.PinWindow(window.GetHandle());
 		}
 
 		/// <summary>
@@ -65,23 +65,23 @@ namespace VDManager.Utils
 		/// </summary>
 		public static void Unpin(this Window window)
 		{
-			VirtualDesktop.UnpinWindow(window.GetHandle());
+			VirtualDesktop.VirtualDesktop.UnpinWindow(window.GetHandle());
 		}
 
 		/// <summary>
 		/// Toggle on/off the pin of a given window.
 		/// </summary>
-		public static void TogglePin(this Window window)
+		public static void TogglePin(Window window, IntPtr windowHandle = default(IntPtr))
 		{
-			var handle = window.GetHandle();
+		    var handle = windowHandle == default(IntPtr) ? window.GetHandle() : windowHandle;
 
-			if (VirtualDesktop.IsPinnedWindow(handle))
+			if (VirtualDesktop.VirtualDesktop.IsPinnedWindow(handle))
 			{
-				VirtualDesktop.UnpinWindow(handle);
+				VirtualDesktop.VirtualDesktop.UnpinWindow(handle);
 			}
 			else
 			{
-				VirtualDesktop.PinWindow(handle);
+				VirtualDesktop.VirtualDesktop.PinWindow(handle);
 			}
 		}
 

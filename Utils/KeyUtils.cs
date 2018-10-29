@@ -7,6 +7,7 @@ using System.Windows.Interop;
 using VDManager.Utils.Enums;
 using VDManager.ViewModels;
 using VDManager.Views;
+using VirtualDesktop;
 
 namespace VDManager.Utils
 {
@@ -27,6 +28,7 @@ namespace VDManager.Utils
 		private const int HOTKEY_ID_INSERT = 9007;
 		private const int HOTKEY_ID_ARROW_LEFT = 9008;
 		private const int HOTKEY_ID_ARROW_RIGHT = 9009;
+        private const int HOTKEY_ID_TILDE = 9010;
 
 		private const int KEYEVENTF_EXTENDEDKEY = 1;
 		private const int KEYEVENTF_KEYUP = 2;
@@ -117,7 +119,6 @@ namespace VDManager.Utils
 		/// <summary>
 		/// Register the toggle service key.
 		/// </summary>
-		/// <param name="window"></param>
 		public void RegisterToggleServiceKey()
 		{
 			var helper = new WindowInteropHelper(MainWindow);
@@ -128,6 +129,20 @@ namespace VDManager.Utils
 				throw new Exception($"Error with binding to Insert [{VK_INSERT}]");
 			}
 		}
+
+        /// <summary>
+        /// Register the toggle pin key.
+        /// </summary>
+	    public void RegisterTogglePinKey()
+	    {
+	        var helper = new WindowInteropHelper(MainWindow);
+	        const uint VK_TILDE = 0xDE; 
+	        const uint MOD_CTRL = 0x0002;
+            if (!RegisterHotKey(helper.Handle, HOTKEY_ID_TILDE, MOD_CTRL, VK_TILDE))
+	        {
+                throw new Exception($"Error with binding to Tilde [{VK_TILDE}]");
+	        }
+	    }
 
 		/// <summary>
 		/// Register the number hotkeys.
@@ -208,6 +223,15 @@ namespace VDManager.Utils
 			var helper = new WindowInteropHelper(MainWindow);
 			UnregisterHotKey(helper.Handle, HOTKEY_ID_INSERT);
 		}
+
+        /// <summary>
+        /// Unregister the toggle pin hotkeys.
+        /// </summary>
+	    public void UnregisterTogglePinKey()
+	    {
+            var helper = new WindowInteropHelper(MainWindow);
+	        UnregisterHotKey(helper.Handle, HOTKEY_ID_TILDE);
+	    }
 
 		/// <summary>
 		/// Unregister the numpad hotkeys.
@@ -297,6 +321,11 @@ namespace VDManager.Utils
 							OnHotKeyPressed(KeysEnum.Insert);
 							handled = true;
 							break;
+
+                        case HOTKEY_ID_TILDE:
+                            OnHotKeyPressed(KeysEnum.Tilde);
+                            handled = true;
+                            break;
 					}
 					break;
 			}
@@ -362,18 +391,28 @@ namespace VDManager.Utils
 				case KeysEnum.Numpad1:
 				case KeysEnum.F1:
 				case KeysEnum.Left:
-					MainWindow.SwitchLeft();
-					break;
+                    MainWindow.SwitchLeft();
+				    ManageGridSetters();
+                    break;
 
 				case KeysEnum.Numpad2:
 				case KeysEnum.F2:
 				case KeysEnum.Right:
 					MainWindow.SwitchRight();
-					break;
+				    ManageGridSetters();
+                    break;
 
 				case KeysEnum.Insert:
 					ViewModel.AppStatus = ViewModel.AppStatus == "RUNNING" ? "STOPPED" : "RUNNING";
 					break;
+
+                case KeysEnum.Tilde:
+                    IntPtr pinHwnd = GetForegroundWindow();
+                    GetWindowThreadProcessId(pinHwnd, out var pinPid);
+                    Process pinProcess = Process.GetProcessById((int)pinPid);
+
+                    WindowExtensions.TogglePin(null, pinProcess.MainWindowHandle);
+                    break;
 			}
 		}
 
@@ -387,6 +426,21 @@ namespace VDManager.Utils
 			GetWindowPlacement(hwnd, ref placement);
 			return placement;
 		}
+
+	    private static void ManageGridSetters()
+	    {
+            foreach (Process process in Process.GetProcesses())
+	        {
+	            if (process.ProcessName.ToLower().StartsWith("gridsetter"))
+	            {
+                    var windowHandle = process.MainWindowHandle;
+	                if (VirtualDesktopHelper.IsCurrentVirtualDesktop(windowHandle))
+	                    ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Normal);
+	                else
+	                    ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Minimize);
+	            }
+	        }
+        }
 
 		#endregion // Methods
 	}

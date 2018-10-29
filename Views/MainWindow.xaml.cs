@@ -7,10 +7,10 @@ using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
-using WindowsDesktop;
 using VDManager.Utils;
 using VDManager.ViewModels;
 using static System.Windows.Application;
+using Application = System.Windows.Application;
 using DragEventArgs = System.Windows.DragEventArgs;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
@@ -103,13 +103,13 @@ namespace VDManager.Views
 		/// </summary>
 		public void SwitchLeft()
 		{
-			if (VirtualDesktop.Current.GetLeft() == null)
+			if (VirtualDesktop.VirtualDesktop.Current.GetLeft() == null)
 			{
-				VirtualDesktop.GetDesktops().Last().Switch();
+				VirtualDesktop.VirtualDesktop.GetDesktops().Last().Switch();
 				return;
 			}
 
-			VirtualDesktop.Current.GetLeft().Switch();
+			VirtualDesktop.VirtualDesktop.Current.GetLeft().Switch();
 		}
 
 		/// <summary>
@@ -117,13 +117,13 @@ namespace VDManager.Views
 		/// </summary>
 		public void SwitchRight()
 		{
-			if (VirtualDesktop.Current.GetRight() == null)
+			if (VirtualDesktop.VirtualDesktop.Current.GetRight() == null)
 			{
-				VirtualDesktop.GetDesktops().First().Switch();
+				VirtualDesktop.VirtualDesktop.GetDesktops().First().Switch();
 				return;
 			}
 
-			VirtualDesktop.Current.GetRight().Switch();
+			VirtualDesktop.VirtualDesktop.Current.GetRight().Switch();
 		}
 
 		#endregion // Methods
@@ -168,8 +168,9 @@ namespace VDManager.Views
 			KeyUtil.UnregisterHotKeyF();
 			KeyUtil.UnregisterHotKeyArrow();
 			KeyUtil.UnregisterToggleServiceKey();
+	        KeyUtil.UnregisterTogglePinKey();
 
-		    ViewModel.CheckboxEvent -= CheckboxChanged;
+            ViewModel.CheckboxEvent -= CheckboxChanged;
 		    base.OnClosed(e);
 	    }
 
@@ -209,21 +210,23 @@ namespace VDManager.Views
 			if (isRunning)
 			{
 				SetNotifyIconMenuItems();
+			    KeyUtil.RegisterTogglePinKey();
 
-				if (ViewModel.UseFKeys)
+                if (ViewModel.UseFKeys)
 				    KeyUtil.RegisterHotKeyF();
 			    if (ViewModel.UseNumPad)
 				    KeyUtil.RegisterHotKeyNumPad();
 			    if (ViewModel.UseArrows)
 				    KeyUtil.RegisterHotKeyArrow();
-			}
-		    else
+            }
+            else
 		    {
 			    SetNotifyIconMenuItems();
 
 				KeyUtil.UnregisterHotKeyNumPad();
 			    KeyUtil.UnregisterHotKeyF();
 			    KeyUtil.UnregisterHotKeyArrow();
+                KeyUtil.UnregisterTogglePinKey();
 			}
 	    }
 

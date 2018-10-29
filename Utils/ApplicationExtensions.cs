@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using WindowsDesktop;
+using VirtualDesktop;
 
 namespace VDManager.Utils
 {
@@ -15,7 +15,7 @@ namespace VDManager.Utils
 		/// </summary>
 		public static bool IsPinned(this Application app)
 		{
-			return VirtualDesktop.IsPinnedApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
+			return VirtualDesktop.VirtualDesktop.IsPinnedApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
 		}
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace VDManager.Utils
 		/// </summary>
 		public static void Pin(this Application app)
 		{
-			VirtualDesktop.PinApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
+			VirtualDesktop.VirtualDesktop.PinApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
 		}
 
 		/// <summary>
@@ -32,24 +32,25 @@ namespace VDManager.Utils
 		/// <param name="app"></param>
 		public static void Unpin(this Application app)
 		{
-			VirtualDesktop.UnpinApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
+			VirtualDesktop.VirtualDesktop.UnpinApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
 		}
 
 		/// <summary>
 		/// Toggle the pin on/off for the given app.
 		/// </summary>
 		/// <param name="app"></param>
-		public static void TogglePin(this Application app)
+		/// <param name="windowHandle"></param>
+		public static void TogglePin(Application app, IntPtr windowHandle = default(IntPtr))
 		{
-			var appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
+			var appId = windowHandle == default(IntPtr) ? ApplicationHelper.GetAppId(app.GetWindowHandle()) : ApplicationHelper.GetAppId(windowHandle);
 
-			if (VirtualDesktop.IsPinnedApplication(appId))
+			if (VirtualDesktop.VirtualDesktop.IsPinnedApplication(appId))
 			{
-				VirtualDesktop.UnpinApplication(appId);
+				VirtualDesktop.VirtualDesktop.UnpinApplication(appId);
 			}
 			else
 			{
-				VirtualDesktop.PinApplication(appId);
+				VirtualDesktop.VirtualDesktop.PinApplication(appId);
 			}
 		}
 

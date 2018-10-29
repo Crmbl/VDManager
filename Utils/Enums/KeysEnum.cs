@@ -15,7 +15,8 @@
 	    F3,
 		Left,
 		Right,
-	    Insert
+	    Insert,
+        Tilde
 
 	    #endregion // Values
 	}
