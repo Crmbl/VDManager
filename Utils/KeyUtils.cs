@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Interop;
@@ -75,7 +74,7 @@ namespace VDManager.Utils
 		[return: MarshalAs(UnmanagedType.Bool)]
 		internal static extern bool GetWindowPlacement(IntPtr hWnd, ref Windowplacement lpwndpl);
 
-		[DllImport("USER32.DLL")]
+        [DllImport("USER32.DLL")]
 		public static extern bool SetForegroundWindow(IntPtr hWnd);
 
 		#endregion // DLL Imports
@@ -410,7 +409,6 @@ namespace VDManager.Utils
                     IntPtr pinHwnd = GetForegroundWindow();
                     GetWindowThreadProcessId(pinHwnd, out var pinPid);
                     Process pinProcess = Process.GetProcessById((int)pinPid);
-
                     WindowExtensions.TogglePin(null, pinProcess.MainWindowHandle);
                     break;
 			}
@@ -427,6 +425,9 @@ namespace VDManager.Utils
 			return placement;
 		}
 
+		/// <summary>
+        /// Allow the GridSetters to be hidden or restore when changing virtual desktop.
+        /// </summary>
 	    private static void ManageGridSetters()
 	    {
             foreach (Process process in Process.GetProcesses())
@@ -434,10 +435,10 @@ namespace VDManager.Utils
 	            if (process.ProcessName.ToLower().StartsWith("gridsetter"))
 	            {
                     var windowHandle = process.MainWindowHandle;
-	                if (VirtualDesktopHelper.IsCurrentVirtualDesktop(windowHandle))
-	                    ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Normal);
-	                else
-	                    ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Minimize);
+                    if (VirtualDesktopHelper.IsCurrentVirtualDesktop(windowHandle))
+	                    ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Maximize);
+                    else
+                        ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Minimize);
 	            }
 	        }
         }

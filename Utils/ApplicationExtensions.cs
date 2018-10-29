@@ -35,14 +35,14 @@ namespace VDManager.Utils
 			VirtualDesktop.VirtualDesktop.UnpinApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
 		}
 
-		/// <summary>
-		/// Toggle the pin on/off for the given app.
-		/// </summary>
-		/// <param name="app"></param>
-		/// <param name="windowHandle"></param>
-		public static void TogglePin(Application app, IntPtr windowHandle = default(IntPtr))
+        /// <summary>
+        /// Toggle the pin on/off for the given app.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="appHandle"></param>
+        public static void TogglePin(Application app, IntPtr appHandle = default(IntPtr))
 		{
-			var appId = windowHandle == default(IntPtr) ? ApplicationHelper.GetAppId(app.GetWindowHandle()) : ApplicationHelper.GetAppId(windowHandle);
+			var appId = appHandle == default(IntPtr) ? ApplicationHelper.GetAppId(app.GetWindowHandle()) : ApplicationHelper.GetAppId(appHandle);
 
 			if (VirtualDesktop.VirtualDesktop.IsPinnedApplication(appId))
 			{
