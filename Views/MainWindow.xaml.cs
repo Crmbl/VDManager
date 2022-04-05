@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using VDManager.Utils;
 using VDManager.ViewModels;
+using WindowsDesktop;
 using static System.Windows.Application;
 using Application = System.Windows.Application;
 using DragEventArgs = System.Windows.DragEventArgs;
@@ -103,13 +104,13 @@ namespace VDManager.Views
 		/// </summary>
 		public void SwitchLeft()
 		{
-			if (VirtualDesktop.VirtualDesktop.Current.GetLeft() == null)
+			if (VirtualDesktop.Current.GetLeft() == null)
 			{
-				VirtualDesktop.VirtualDesktop.GetDesktops().Last().Switch();
+				VirtualDesktop.GetDesktops().Last().Switch();
 				return;
 			}
 
-			VirtualDesktop.VirtualDesktop.Current.GetLeft().Switch();
+			VirtualDesktop.Current.GetLeft().Switch();
 		}
 
 		/// <summary>
@@ -117,13 +118,13 @@ namespace VDManager.Views
 		/// </summary>
 		public void SwitchRight()
 		{
-			if (VirtualDesktop.VirtualDesktop.Current.GetRight() == null)
+			if (VirtualDesktop.Current.GetRight() == null)
 			{
-				VirtualDesktop.VirtualDesktop.GetDesktops().First().Switch();
+				VirtualDesktop.GetDesktops().First().Switch();
 				return;
 			}
 
-			VirtualDesktop.VirtualDesktop.Current.GetRight().Switch();
+			VirtualDesktop.Current.GetRight().Switch();
 		}
 
 		#endregion // Methods

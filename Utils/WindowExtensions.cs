@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
-using VirtualDesktop;
+using WindowsDesktop;
 
 namespace VDManager.Utils
 {
@@ -22,15 +22,15 @@ namespace VDManager.Utils
 		/// <summary>
 		/// Returns a virtual desktop that window is located.
 		/// </summary>
-		public static VirtualDesktop.VirtualDesktop GetCurrentDesktop(this Window window)
+		public static VirtualDesktop GetCurrentDesktop(this Window window)
 		{
-			return VirtualDesktop.VirtualDesktop.FromHwnd(window.GetHandle());
+			return VirtualDesktop.FromHwnd(window.GetHandle());
 		}
 
 		/// <summary>
 		/// Move this window to specified virtual desktop.
 		/// </summary>
-		public static void MoveToDesktop(this Window window, VirtualDesktop.VirtualDesktop virtualDesktop)
+		public static void MoveToDesktop(this Window window, VirtualDesktop virtualDesktop)
 		{
 			VirtualDesktopHelper.MoveToDesktop(window.GetHandle(), virtualDesktop);
 		}
@@ -38,7 +38,7 @@ namespace VDManager.Utils
 		/// <summary>
 		/// Switch to virtual desktop and move the window.
 		/// </summary>
-		public static void SwitchAndMove(this VirtualDesktop.VirtualDesktop virtualDesktop, Window window)
+		public static void SwitchAndMove(this VirtualDesktop virtualDesktop, Window window)
 		{
 			window.MoveToDesktop(virtualDesktop);
 			virtualDesktop.Switch();
@@ -49,7 +49,7 @@ namespace VDManager.Utils
 		/// </summary>
 		public static bool IsPinned(this Window window)
 		{
-			return VirtualDesktop.VirtualDesktop.IsPinnedWindow(window.GetHandle());
+			return VirtualDesktop.IsPinnedWindow(window.GetHandle());
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace VDManager.Utils
 		/// </summary>
 		public static void Pin(this Window window)
 		{
-			VirtualDesktop.VirtualDesktop.PinWindow(window.GetHandle());
+			VirtualDesktop.PinWindow(window.GetHandle());
 		}
 
 		/// <summary>
@@ -65,7 +65,7 @@ namespace VDManager.Utils
 		/// </summary>
 		public static void Unpin(this Window window)
 		{
-			VirtualDesktop.VirtualDesktop.UnpinWindow(window.GetHandle());
+			VirtualDesktop.UnpinWindow(window.GetHandle());
 		}
 
 		/// <summary>
@@ -75,13 +75,13 @@ namespace VDManager.Utils
 		{
 		    var handle = windowHandle == default(IntPtr) ? window.GetHandle() : windowHandle;
 
-			if (VirtualDesktop.VirtualDesktop.IsPinnedWindow(handle))
+			if (VirtualDesktop.IsPinnedWindow(handle))
 			{
-				VirtualDesktop.VirtualDesktop.UnpinWindow(handle);
+				VirtualDesktop.UnpinWindow(handle);
 			}
 			else
 			{
-				VirtualDesktop.VirtualDesktop.PinWindow(handle);
+				VirtualDesktop.PinWindow(handle);
 			}
 		}
 

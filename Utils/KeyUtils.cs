@@ -6,7 +6,7 @@ using System.Windows.Interop;
 using VDManager.Utils.Enums;
 using VDManager.ViewModels;
 using VDManager.Views;
-using VirtualDesktop;
+using WindowsDesktop;
 
 namespace VDManager.Utils
 {

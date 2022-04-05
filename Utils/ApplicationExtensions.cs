@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using VirtualDesktop;
+using WindowsDesktop;
 
 namespace VDManager.Utils
 {
@@ -15,7 +15,7 @@ namespace VDManager.Utils
 		/// </summary>
 		public static bool IsPinned(this Application app)
 		{
-			return VirtualDesktop.VirtualDesktop.IsPinnedApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
+			return VirtualDesktop.IsPinnedApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
 		}
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace VDManager.Utils
 		/// </summary>
 		public static void Pin(this Application app)
 		{
-			VirtualDesktop.VirtualDesktop.PinApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
+			VirtualDesktop.PinApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
 		}
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace VDManager.Utils
 		/// <param name="app"></param>
 		public static void Unpin(this Application app)
 		{
-			VirtualDesktop.VirtualDesktop.UnpinApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
+			VirtualDesktop.UnpinApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
 		}
 
         /// <summary>
@@ -44,13 +44,13 @@ namespace VDManager.Utils
 		{
 			var appId = appHandle == default(IntPtr) ? ApplicationHelper.GetAppId(app.GetWindowHandle()) : ApplicationHelper.GetAppId(appHandle);
 
-			if (VirtualDesktop.VirtualDesktop.IsPinnedApplication(appId))
+			if (VirtualDesktop.IsPinnedApplication(appId))
 			{
-				VirtualDesktop.VirtualDesktop.UnpinApplication(appId);
+				VirtualDesktop.UnpinApplication(appId);
 			}
 			else
 			{
-				VirtualDesktop.VirtualDesktop.PinApplication(appId);
+				VirtualDesktop.PinApplication(appId);
 			}
 		}
 

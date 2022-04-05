@@ -92,6 +92,9 @@
     <Reference Include="Unity.ServiceLocation, Version=2.1.0.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.5.5.6\lib\net45\Unity.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="VirtualDesktop, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\VirtualDesktop.Standard.1.0.1\lib\netstandard2.0\VirtualDesktop.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -166,12 +169,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\VirtualDesktop\VirtualDesktop.csproj">
-      <Project>{AB848ECD-76AA-41C0-B63D-86A8591B25AA}</Project>
-      <Name>VirtualDesktop</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\background.png" />
