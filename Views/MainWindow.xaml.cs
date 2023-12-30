@@ -278,6 +278,7 @@ namespace VDManager.Views
 			if (NotifyIcon.ContextMenu == null)
 				NotifyIcon.ContextMenu = new ContextMenu();
 
+			NotifyIcon.Text = "VD Manager";
 			NotifyIcon.ContextMenu.MenuItems.Clear();
 		    NotifyIcon.ContextMenu.MenuItems.Add("Maximize", (s, e) => { Show(); WindowState = WindowState.Normal; NotifyIcon.Visible = false; });
 
