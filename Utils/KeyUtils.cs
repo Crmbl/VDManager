@@ -435,7 +435,7 @@ namespace VDManager.Utils
 	            if (process.ProcessName.ToLower().StartsWith("gridsetter"))
 	            {
                     var windowHandle = process.MainWindowHandle;
-                    if (VirtualDesktopHelper.IsCurrentVirtualDesktop(windowHandle))
+                    if (VirtualDesktop.IsCurrentVirtualDesktop(windowHandle))
 	                    ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Maximize);
                     else
                         ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Minimize);

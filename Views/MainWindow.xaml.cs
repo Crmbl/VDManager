@@ -11,8 +11,6 @@ using VDManager.Utils;
 using VDManager.ViewModels;
 using WindowsDesktop;
 using static System.Windows.Application;
-using Application = System.Windows.Application;
-using DragEventArgs = System.Windows.DragEventArgs;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
 namespace VDManager.Views
@@ -70,9 +68,9 @@ namespace VDManager.Views
 
 		    DataContext = ViewModel;
 
-			#region System Tray Icon
+            #region System Tray Icon
 
-			var resourceStream = GetResourceStream(_iconOn);
+            var resourceStream = GetResourceStream(_iconOn);
 		    if (resourceStream == null) return;
 
 		    Stream iconStream = resourceStream.Stream;
@@ -275,20 +273,21 @@ namespace VDManager.Views
 		/// </summary>
 	    public void SetNotifyIconMenuItems()
 	    {
-			if (NotifyIcon.ContextMenu == null)
-				NotifyIcon.ContextMenu = new ContextMenu();
+			if (NotifyIcon.ContextMenuStrip == null)
+				// TODO ContextMenu is no longer supported. Use ContextMenuStrip instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
+				NotifyIcon.ContextMenuStrip = new ContextMenuStrip();
 
 			NotifyIcon.Text = "VD Manager";
-			NotifyIcon.ContextMenu.MenuItems.Clear();
-		    NotifyIcon.ContextMenu.MenuItems.Add("Maximize", (s, e) => { Show(); WindowState = WindowState.Normal; NotifyIcon.Visible = false; });
+			NotifyIcon.ContextMenuStrip.Items.Clear();
+			NotifyIcon.ContextMenuStrip.Items.Add("Maximize", null, (s, e) => { Show(); WindowState = WindowState.Normal; NotifyIcon.Visible = false; });
 
-			bool isRunning = ViewModel.AppStatus == "RUNNING";
+            bool isRunning = ViewModel.AppStatus == "RUNNING";
 			if (isRunning)
-				NotifyIcon.ContextMenu.MenuItems.Add("Toggle Off", (s, e) => { ViewModel.AppStatus = "STOPPED"; });
+				NotifyIcon.ContextMenuStrip.Items.Add("Toggle Off", null, (s, e) => { ViewModel.AppStatus = "STOPPED"; });
 			else
-				NotifyIcon.ContextMenu.MenuItems.Add("Toggle On", (s, e) => { ViewModel.AppStatus = "RUNNING"; });
+				NotifyIcon.ContextMenuStrip.Items.Add("Toggle On", null, (s, e) => { ViewModel.AppStatus = "RUNNING"; });
 
-		    NotifyIcon.ContextMenu.MenuItems.Add("Exit", (s, e) => Current.Shutdown());
+		    NotifyIcon.ContextMenuStrip.Items.Add("Exit", null, (s, e) => Current.Shutdown());
 		}
 
 		#endregion // Methods

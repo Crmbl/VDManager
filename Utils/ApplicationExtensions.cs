@@ -15,7 +15,8 @@ namespace VDManager.Utils
 		/// </summary>
 		public static bool IsPinned(this Application app)
 		{
-			return VirtualDesktop.IsPinnedApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
+			VirtualDesktop.TryGetAppUserModelId(app.GetWindowHandle(), out string appId);
+            return VirtualDesktop.IsPinnedApplication(appId);
 		}
 
 		/// <summary>
@@ -23,7 +24,8 @@ namespace VDManager.Utils
 		/// </summary>
 		public static void Pin(this Application app)
 		{
-			VirtualDesktop.PinApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
+            VirtualDesktop.TryGetAppUserModelId(app.GetWindowHandle(), out string appId);
+            VirtualDesktop.PinApplication(appId);
 		}
 
 		/// <summary>
@@ -32,7 +34,8 @@ namespace VDManager.Utils
 		/// <param name="app"></param>
 		public static void Unpin(this Application app)
 		{
-			VirtualDesktop.UnpinApplication(ApplicationHelper.GetAppId(app.GetWindowHandle()));
+            VirtualDesktop.TryGetAppUserModelId(app.GetWindowHandle(), out string appId);
+            VirtualDesktop.UnpinApplication(appId);
 		}
 
         /// <summary>
@@ -42,16 +45,16 @@ namespace VDManager.Utils
         /// <param name="appHandle"></param>
         public static void TogglePin(Application app, IntPtr appHandle = default(IntPtr))
 		{
-			var appId = appHandle == default(IntPtr) ? ApplicationHelper.GetAppId(app.GetWindowHandle()) : ApplicationHelper.GetAppId(appHandle);
+			string appId;
+            if (appHandle == default(IntPtr))
+				VirtualDesktop.TryGetAppUserModelId(app.GetWindowHandle(), out appId);
+			else
+				VirtualDesktop.TryGetAppUserModelId(appHandle, out appId);
 
 			if (VirtualDesktop.IsPinnedApplication(appId))
-			{
 				VirtualDesktop.UnpinApplication(appId);
-			}
 			else
-			{
 				VirtualDesktop.PinApplication(appId);
-			}
 		}
 
 		/// <summary>

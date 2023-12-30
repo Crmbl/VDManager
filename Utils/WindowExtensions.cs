@@ -16,7 +16,7 @@ namespace VDManager.Utils
 		/// </summary>
 		public static bool IsCurrentVirtualDesktop(this Window window)
 		{
-			return VirtualDesktopHelper.IsCurrentVirtualDesktop(window.GetHandle());
+			return VirtualDesktop.IsCurrentVirtualDesktop(window.GetHandle());
 		}
 
 		/// <summary>
@@ -32,7 +32,7 @@ namespace VDManager.Utils
 		/// </summary>
 		public static void MoveToDesktop(this Window window, VirtualDesktop virtualDesktop)
 		{
-			VirtualDesktopHelper.MoveToDesktop(window.GetHandle(), virtualDesktop);
+            VirtualDesktop.MoveToDesktop(window.GetHandle(), virtualDesktop);
 		}
 
 		/// <summary>
