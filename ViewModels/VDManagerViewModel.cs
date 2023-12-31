@@ -214,7 +214,7 @@ namespace VDManager.ViewModels
             AppStatus = "RUNNING";
 
 	        UseNumPad = false;
-			UseFKeys = true;
+			UseFKeys = false;
 	        UseArrows = true;
 
 	        ExitCommand = new ActionCommand(() => System.Windows.Application.Current.Shutdown());

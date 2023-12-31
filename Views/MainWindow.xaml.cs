@@ -44,12 +44,7 @@ namespace VDManager.Views
 	    /// <summary>
 	    /// Ref to the icon.
 	    /// </summary>
-	    private readonly Uri _iconOn = new Uri("pack://application:,,,/Resources/Images/watermelon.ico");
-
-	    /// <summary>
-	    /// Ref to the icon.
-	    /// </summary>
-	    private readonly Uri _iconOff = new Uri("pack://application:,,,/Resources/Images/peach.ico");
+	    private readonly Uri _iconOn = new Uri("pack://application:,,,/Resources/Images/tablet.ico");
 
 		#endregion // Constants
 
@@ -91,6 +86,9 @@ namespace VDManager.Views
 		    SetNotifyIconMenuItems();
 
 			#endregion // System Tray Icon
+
+			//Just used to initialize
+			var current = VirtualDesktop.Current;
 		}
 
 		#endregion // Constructor
@@ -200,7 +198,7 @@ namespace VDManager.Views
 		{
 			var isRunning = ViewModel.AppStatus == "RUNNING";
 
-			var resourceStream = GetResourceStream(isRunning ? _iconOn : _iconOff);
+			var resourceStream = GetResourceStream(_iconOn/*isRunning ? _iconOn : _iconOff*/);
 		    if (resourceStream == null) return;
 		    Stream iconStream = resourceStream.Stream;
 		    NotifyIcon.Icon = new Icon(iconStream);
