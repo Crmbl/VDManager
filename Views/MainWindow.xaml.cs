@@ -46,14 +46,19 @@ namespace VDManager.Views
 	    /// </summary>
 	    private readonly Uri _iconOn = new Uri("pack://application:,,,/Resources/Images/tablet.ico");
 
-		#endregion // Constants
+        /// <summary>
+        /// Ref to the icon.
+        /// </summary>
+        private readonly Uri _iconOff = new Uri("pack://application:,,,/Resources/Images/tabletOff.ico");
 
-		#region Constructor
+        #endregion // Constants
 
-		/// <summary>
-		/// <see cref="MainWindow"/> constructor.
-		/// </summary>
-		public MainWindow()
+        #region Constructor
+
+        /// <summary>
+        /// <see cref="MainWindow"/> constructor.
+        /// </summary>
+        public MainWindow()
 	    {
 		    InitializeComponent();
 
@@ -202,7 +207,7 @@ namespace VDManager.Views
 		{
 			var isRunning = ViewModel.AppStatus == "RUNNING";
 
-			var resourceStream = GetResourceStream(_iconOn/*isRunning ? _iconOn : _iconOff*/);
+			var resourceStream = GetResourceStream(isRunning ? _iconOn : _iconOff);
 		    if (resourceStream == null) return;
 		    Stream iconStream = resourceStream.Stream;
 		    NotifyIcon.Icon = new Icon(iconStream);

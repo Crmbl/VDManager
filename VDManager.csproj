@@ -30,6 +30,9 @@
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\Images\tabletOff.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="app.manifest">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -48,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\background.png" />
+    <Resource Include="Resources\Images\tabletOff.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\vd.ico" />
