@@ -152,7 +152,11 @@ namespace VDManager.Views
 		    KeyUtil.Source = HwndSource.FromHwnd(helper.Handle);
 		    KeyUtil.Source?.AddHook(KeyUtil.HwndHook);
 		    KeyUtil.RegisterToggleServiceKey();
-	    }
+
+            WindowState = WindowState.Minimized;
+            NotifyIcon.Visible = true;
+            Hide();
+        }
 
 		/// <summary>
 		/// Event raised on app closed.
