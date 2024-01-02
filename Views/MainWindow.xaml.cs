@@ -44,7 +44,7 @@ namespace VDManager.Views
 	    /// <summary>
 	    /// Ref to the icon.
 	    /// </summary>
-	    private readonly Uri _iconOn = new Uri("pack://application:,,,/Resources/Images/tablet.ico");
+	    private readonly Uri _iconOn = new Uri("pack://application:,,,/Resources/Images/tabletOn.ico");
 
         /// <summary>
         /// Ref to the icon.

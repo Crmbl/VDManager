@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\Images\tabletOff.ico" />
+    <None Remove="Resources\Images\tabletOn.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.manifest">
@@ -52,15 +53,13 @@
   <ItemGroup>
     <Resource Include="Resources\Images\background.png" />
     <Resource Include="Resources\Images\tabletOff.ico" />
+    <Resource Include="Resources\Images\tabletOn.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\vd.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="vd.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\tablet.ico" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitattributes" />
