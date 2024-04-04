@@ -66,17 +66,9 @@
     <Content Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="Unity" Version="5.11.10" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="VirtualDesktop">
-      <HintPath>..\VirtualDesktop_forked\src\VirtualDesktop.WPF\bin\Debug\net6.0-windows10.0.19041.0\VirtualDesktop.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtualDesktop.WPF">
-      <HintPath>..\VirtualDesktop_forked\src\VirtualDesktop.WPF\bin\Debug\net6.0-windows10.0.19041.0\VirtualDesktop.WPF.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

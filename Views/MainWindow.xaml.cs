@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Forms;
@@ -9,7 +8,6 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using VDManager.Utils;
 using VDManager.ViewModels;
-using WindowsDesktop;
 using static System.Windows.Application;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
@@ -93,7 +91,7 @@ namespace VDManager.Views
 			#endregion // System Tray Icon
 
 			//Just used to initialize
-			var current = VirtualDesktop.Current;
+			var current = VirtualDesktop.GetCurrent();
 		}
 
 		#endregion // Constructor
@@ -105,13 +103,7 @@ namespace VDManager.Views
 		/// </summary>
 		public void SwitchLeft()
 		{
-			if (VirtualDesktop.Current.GetLeft() == null)
-			{
-				VirtualDesktop.GetDesktops().Last().Switch();
-				return;
-			}
-
-			VirtualDesktop.Current.GetLeft().Switch();
+			VirtualDesktop.GoLeft();
 		}
 
 		/// <summary>
@@ -119,13 +111,7 @@ namespace VDManager.Views
 		/// </summary>
 		public void SwitchRight()
 		{
-			if (VirtualDesktop.Current.GetRight() == null)
-			{
-				VirtualDesktop.GetDesktops().First().Switch();
-				return;
-			}
-
-			VirtualDesktop.Current.GetRight().Switch();
+			VirtualDesktop.GoRight();
 		}
 
 		#endregion // Methods
@@ -174,7 +160,6 @@ namespace VDManager.Views
 			KeyUtil.UnregisterHotKeyF();
 			KeyUtil.UnregisterHotKeyArrow();
 			KeyUtil.UnregisterToggleServiceKey();
-	        KeyUtil.UnregisterTogglePinKey();
 
             ViewModel.CheckboxEvent -= CheckboxChanged;
 		    base.OnClosed(e);
@@ -216,7 +201,6 @@ namespace VDManager.Views
 			if (isRunning)
 			{
 				SetNotifyIconMenuItems();
-			    KeyUtil.RegisterTogglePinKey();
 
                 if (ViewModel.UseFKeys)
 				    KeyUtil.RegisterHotKeyF();
@@ -232,7 +216,6 @@ namespace VDManager.Views
 				KeyUtil.UnregisterHotKeyNumPad();
 			    KeyUtil.UnregisterHotKeyF();
 			    KeyUtil.UnregisterHotKeyArrow();
-                KeyUtil.UnregisterTogglePinKey();
 			}
 	    }
 
