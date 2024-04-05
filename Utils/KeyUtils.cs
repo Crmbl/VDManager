@@ -398,10 +398,12 @@ namespace VDManager.Utils
             var gridSetters = processes.Where(x => x.ProcessName.ToLower().StartsWith("gridsetter")).ToList();
             foreach (Process process in gridSetters)
             {
-				//TODO might crash if not grid open but just launcher ?
                 if (process.ProcessName.ToLower().StartsWith("gridsetter"))
                 {
                     var windowHandle = process.MainWindowHandle;
+					if (windowHandle == IntPtr.Zero) 
+						return;
+
                     if (VirtualDesktop.IsWindowOnCurrentVirtualDesktop(windowHandle))
                         ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Maximize);
                     else
