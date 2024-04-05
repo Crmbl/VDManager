@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Interop;
@@ -393,17 +394,20 @@ namespace VDManager.Utils
         /// </summary>
 	    private static void ManageGridSetters()
 	    {
-            foreach (Process process in Process.GetProcesses())
-	        {
-	            if (process.ProcessName.ToLower().StartsWith("gridsetter"))
-	            {
+			var processes = Process.GetProcesses();
+            var gridSetters = processes.Where(x => x.ProcessName.ToLower().StartsWith("gridsetter")).ToList();
+            foreach (Process process in gridSetters)
+            {
+				//TODO might crash if not grid open but just launcher ?
+                if (process.ProcessName.ToLower().StartsWith("gridsetter"))
+                {
                     var windowHandle = process.MainWindowHandle;
                     if (VirtualDesktop.IsWindowOnCurrentVirtualDesktop(windowHandle))
-	                    ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Maximize);
+                        ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Maximize);
                     else
                         ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Minimize);
-	            }
-	        }
+                }
+            }
         }
 
 		#endregion // Methods

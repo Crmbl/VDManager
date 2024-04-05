@@ -7,7 +7,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text;
 
 // set attributes
@@ -742,11 +741,9 @@ namespace VDManager.Utils
     public static class VirtualDesktop
     {
         static bool verbose = true;
-        static bool breakonerror = true;
         static bool wrapdesktops = true;
-        static int rc = 0;
 
-        #region Actual Methods
+        #region Public Methods
 
         public static void GoLeft()
         {
@@ -756,13 +753,10 @@ namespace VDManager.Utils
                     Desktop.FromIndex(Desktop.Count - 1).MakeVisible();
                 else
                     Desktop.Current.Left.MakeVisible();
-
-                rc = Desktop.FromDesktop(Desktop.Current);
             }
             catch
             { // error while activating
                 if (verbose) Console.WriteLine();
-                rc = -1;
             }
         }
 
@@ -774,25 +768,23 @@ namespace VDManager.Utils
                     Desktop.FromIndex(0).MakeVisible();
                 else
                     Desktop.Current.Right.MakeVisible();
-
-                rc = Desktop.FromDesktop(Desktop.Current);
             }
             catch
             { // error while activating
                 if (verbose) Console.WriteLine();
-                rc = -1;
             }
         }
 
-        public static int GetCurrent()
+        public static bool IsWindowOnCurrentVirtualDesktop(nint handle)
         {
-            rc = Desktop.FromDesktop(Desktop.Current);
-            return rc;
+            return DesktopManager.VirtualDesktopManager.IsWindowOnCurrentVirtualDesktop(handle);
         }
 
-        #endregion // Actual Methods
+        #endregion // Public Methods
 
-        public static List<int> GetMainWindowHandle(string ProcessName)
+        #region Private Methods
+
+        static List<int> GetMainWindowHandle(string ProcessName)
         { // retrieve main window handle to process name
             System.Diagnostics.Process[] processes = System.Diagnostics.Process.GetProcessesByName(ProcessName);
 
@@ -803,11 +795,6 @@ namespace VDManager.Utils
             }
 
             return processList;
-        }
-
-        public static bool IsWindowOnCurrentVirtualDesktop(nint handle)
-        {
-            return DesktopManager.VirtualDesktopManager.IsWindowOnCurrentVirtualDesktop(handle);
         }
 
         private delegate bool EnumDelegate(IntPtr hWnd, int lParam);
@@ -981,5 +968,7 @@ namespace VDManager.Utils
             Desktop.FromIndex(iSwapDesktop1).SetName(desktopname2);
             Desktop.FromIndex(iSwapDesktop2).SetName(desktopname1);
         }
+
+        #endregion // Private Methods
     }
 }

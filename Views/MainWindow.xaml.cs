@@ -89,9 +89,6 @@ namespace VDManager.Views
 		    SetNotifyIconMenuItems();
 
 			#endregion // System Tray Icon
-
-			//Just used to initialize
-			var current = VirtualDesktop.GetCurrent();
 		}
 
 		#endregion // Constructor
