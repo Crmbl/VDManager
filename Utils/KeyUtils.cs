@@ -76,14 +76,14 @@ namespace VDManager.Utils
         [DllImport("USER32.DLL")]
 		public static extern bool SetForegroundWindow(IntPtr hWnd);
 
-		#endregion // DLL Imports
+        #endregion // DLL Imports
 
-		#region Properties
+        #region Properties
 
-		/// <summary>
-		/// Source of binding.
-		/// </summary>
-		public HwndSource Source { get; set; }
+        /// <summary>
+        /// Source of binding.
+        /// </summary>
+        public HwndSource Source { get; set; }
 
 		/// <summary>
 		/// The viewModel we want to bind on.
@@ -398,11 +398,11 @@ namespace VDManager.Utils
             var gridSetters = processes.Where(x => x.ProcessName.ToLower().StartsWith("gridsetter")).ToList();
             foreach (Process process in gridSetters)
             {
-                if (process.ProcessName.ToLower().StartsWith("gridsetter"))
+                if (process.ProcessName.ToLower().StartsWith("gridsetter") && process.MainWindowTitle.ToLower() == "grid")
                 {
-                    var windowHandle = process.MainWindowHandle;
-					if (windowHandle == IntPtr.Zero) 
-						return;
+					nint windowHandle = process.MainWindowHandle;
+                    if (windowHandle == IntPtr.Zero)
+                        return;
 
                     if (VirtualDesktop.IsWindowOnCurrentVirtualDesktop(windowHandle))
                         ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Maximize);
@@ -412,6 +412,6 @@ namespace VDManager.Utils
             }
         }
 
-		#endregion // Methods
-	}
+        #endregion // Methods
+    }
 }
