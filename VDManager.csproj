@@ -30,8 +30,12 @@
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\Images\exit.png" />
+    <None Remove="Resources\Images\maximize.png" />
     <None Remove="Resources\Images\tabletOff.ico" />
     <None Remove="Resources\Images\tabletOn.ico" />
+    <None Remove="Resources\Images\toggleOff.png" />
+    <None Remove="Resources\Images\toggleOn.png" />
   </ItemGroup>
   <ItemGroup>
     <None Update="app.manifest">
@@ -64,6 +68,20 @@
   <ItemGroup>
     <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Images\exit.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Images\maximize.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Images\toggleOff.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Images\toggleOn.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />

@@ -264,17 +264,28 @@ namespace VDManager.Views
 				// TODO ContextMenu is no longer supported. Use ContextMenuStrip instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
 				NotifyIcon.ContextMenuStrip = new ContextMenuStrip();
 
-			NotifyIcon.Text = "VD Manager";
+            var bitmapMaximize = Bitmap.FromFile($"{AppDomain.CurrentDomain.BaseDirectory}\\Resources\\Images\\maximize.png");
+            var bitmapExit = Bitmap.FromFile($"{AppDomain.CurrentDomain.BaseDirectory}\\Resources\\Images\\exit.png");
+
+            NotifyIcon.Text = "VD Manager";
 			NotifyIcon.ContextMenuStrip.Items.Clear();
-			NotifyIcon.ContextMenuStrip.Items.Add("Maximize", null, (s, e) => { Show(); WindowState = WindowState.Normal; NotifyIcon.Visible = false; });
+			NotifyIcon.ContextMenuStrip.Items.Add("Maximize", bitmapMaximize, (s, e) => { Show(); WindowState = WindowState.Normal; NotifyIcon.Visible = false; });
 
             bool isRunning = ViewModel.AppStatus == "RUNNING";
 			if (isRunning)
-				NotifyIcon.ContextMenuStrip.Items.Add("Toggle Off", null, (s, e) => { ViewModel.AppStatus = "STOPPED"; });
+			{
+                var bitmapOff = Bitmap.FromFile($"{AppDomain.CurrentDomain.BaseDirectory}\\Resources\\Images\\toggleOff.png");
+                NotifyIcon.ContextMenuStrip.Items.Add("Toggle Off", bitmapOff, (s, e) => { ViewModel.AppStatus = "STOPPED"; });
+				bitmapOff = null;
+            }
 			else
-				NotifyIcon.ContextMenuStrip.Items.Add("Toggle On", null, (s, e) => { ViewModel.AppStatus = "RUNNING"; });
+			{
+                var bitmapOn = Bitmap.FromFile($"{AppDomain.CurrentDomain.BaseDirectory}\\Resources\\Images\\toggleOn.png");
+                NotifyIcon.ContextMenuStrip.Items.Add("Toggle On", bitmapOn, (s, e) => { ViewModel.AppStatus = "RUNNING"; });
+				bitmapOn = null;
+            }
 
-		    NotifyIcon.ContextMenuStrip.Items.Add("Exit", null, (s, e) => Current.Shutdown());
+		    NotifyIcon.ContextMenuStrip.Items.Add("Exit", bitmapExit, (s, e) => Current.Shutdown());
 		}
 
 		#endregion // Methods
