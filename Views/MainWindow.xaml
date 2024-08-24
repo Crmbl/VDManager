@@ -8,7 +8,8 @@
         MouseDown="WindowMouseDown"
         MouseEnter="WindowMouseEnter"
         MouseUp="WindowMouseUp"
-        MouseDoubleClick="WindowMouseDouble">
+        MouseDoubleClick="WindowMouseDouble"
+        Height="0" Width="0">
     <Window.Background>
         <ImageBrush ImageSource="{StaticResource Background}" />
     </Window.Background>

@@ -23,13 +23,14 @@
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>vd.ico</ApplicationIcon>
+    <ApplicationIcon>3d.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\Images\3d.ico" />
     <None Remove="Resources\Images\exit.png" />
     <None Remove="Resources\Images\maximize.png" />
     <None Remove="Resources\Images\tabletOff.ico" />
@@ -55,6 +56,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Images\3d.ico" />
     <Resource Include="Resources\Images\background.png" />
     <Resource Include="Resources\Images\tabletOff.ico" />
     <Resource Include="Resources\Images\tabletOn.ico" />
@@ -68,6 +70,7 @@
   <ItemGroup>
     <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
+    <Content Include="3d.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Images\exit.png">

@@ -42,7 +42,7 @@ namespace VDManager.Views
 	    /// <summary>
 	    /// Ref to the icon.
 	    /// </summary>
-	    private readonly Uri _iconOn = new Uri("pack://application:,,,/Resources/Images/tabletOn.ico");
+	    private readonly Uri _iconOn = new Uri("pack://application:,,,/Resources/Images/3d.ico");
 
         /// <summary>
         /// Ref to the icon.
@@ -74,7 +74,7 @@ namespace VDManager.Views
 		    Stream iconStream = resourceStream.Stream;
 		    NotifyIcon = new NotifyIcon
 		    {
-			    Icon = new Icon(iconStream),
+			    Icon = new Icon(iconStream, SystemInformation.SmallIconSize),
 			    Visible = false
 		    };
 		    iconStream.Dispose();
@@ -139,7 +139,7 @@ namespace VDManager.Views
 		    var helper = new WindowInteropHelper(this);
 		    KeyUtil.Source = HwndSource.FromHwnd(helper.Handle);
 		    KeyUtil.Source?.AddHook(KeyUtil.HwndHook);
-		    KeyUtil.RegisterToggleServiceKey();
+		    //KeyUtil.RegisterToggleServiceKey();
 
             WindowState = WindowState.Minimized;
             NotifyIcon.Visible = true;
@@ -189,11 +189,11 @@ namespace VDManager.Views
 		{
 			var isRunning = ViewModel.AppStatus == "RUNNING";
 
-			var resourceStream = GetResourceStream(isRunning ? _iconOn : _iconOff);
-		    if (resourceStream == null) return;
-		    Stream iconStream = resourceStream.Stream;
-		    NotifyIcon.Icon = new Icon(iconStream);
-		    iconStream.Dispose();
+			//var resourceStream = GetResourceStream(isRunning ? _iconOn : _iconOff);
+		 //   if (resourceStream == null) return;
+		 //   Stream iconStream = resourceStream.Stream;
+		 //   NotifyIcon.Icon = new Icon(iconStream);
+		 //   iconStream.Dispose();
 
 			if (isRunning)
 			{
@@ -264,12 +264,12 @@ namespace VDManager.Views
 				// TODO ContextMenu is no longer supported. Use ContextMenuStrip instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
 				NotifyIcon.ContextMenuStrip = new ContextMenuStrip();
 
-            var bitmapMaximize = Bitmap.FromFile($"{AppDomain.CurrentDomain.BaseDirectory}\\Resources\\Images\\maximize.png");
+            //var bitmapMaximize = Bitmap.FromFile($"{AppDomain.CurrentDomain.BaseDirectory}\\Resources\\Images\\maximize.png");
             var bitmapExit = Bitmap.FromFile($"{AppDomain.CurrentDomain.BaseDirectory}\\Resources\\Images\\exit.png");
 
             NotifyIcon.Text = "VD Manager";
 			NotifyIcon.ContextMenuStrip.Items.Clear();
-			NotifyIcon.ContextMenuStrip.Items.Add("Maximize", bitmapMaximize, (s, e) => { Show(); WindowState = WindowState.Normal; NotifyIcon.Visible = false; });
+			//NotifyIcon.ContextMenuStrip.Items.Add("Maximize", bitmapMaximize, (s, e) => { Show(); WindowState = WindowState.Normal; NotifyIcon.Visible = false; });
 
             bool isRunning = ViewModel.AppStatus == "RUNNING";
 			if (isRunning)
@@ -286,6 +286,9 @@ namespace VDManager.Views
             }
 
 		    NotifyIcon.ContextMenuStrip.Items.Add("Exit", bitmapExit, (s, e) => Current.Shutdown());
+
+            //bitmapMaximize = null;
+            bitmapExit = null;
 		}
 
 		#endregion // Methods
