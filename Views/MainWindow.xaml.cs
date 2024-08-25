@@ -81,10 +81,12 @@ namespace VDManager.Views
 
 		    NotifyIcon.DoubleClick += delegate
 		    {
-			    Show();
-			    WindowState = WindowState.Normal;
-			    NotifyIcon.Visible = false;
-		    };
+                //Show();
+                //WindowState = WindowState.Normal;
+                //NotifyIcon.Visible = false;
+
+                ViewModel.AppStatus = ViewModel.AppStatus == "RUNNING" ? "STOPPED" : "RUNNING";
+            };
 
 		    SetNotifyIconMenuItems();
 
@@ -156,7 +158,7 @@ namespace VDManager.Views
 			KeyUtil.UnregisterHotKeyNumPad();
 			KeyUtil.UnregisterHotKeyF();
 			KeyUtil.UnregisterHotKeyArrow();
-			KeyUtil.UnregisterToggleServiceKey();
+			//KeyUtil.UnregisterToggleServiceKey();
 
             ViewModel.CheckboxEvent -= CheckboxChanged;
 		    base.OnClosed(e);
