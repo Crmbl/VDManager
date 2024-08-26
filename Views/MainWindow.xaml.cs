@@ -102,7 +102,8 @@ namespace VDManager.Views
 		/// </summary>
 		public void SwitchLeft()
 		{
-			VirtualDesktop.GoLeft();
+            if (Desktop.Count != 1)
+                VirtualDesktop.GoLeft();
 		}
 
 		/// <summary>
@@ -110,7 +111,8 @@ namespace VDManager.Views
 		/// </summary>
 		public void SwitchRight()
 		{
-			VirtualDesktop.GoRight();
+			if (Desktop.Count != 1)
+				VirtualDesktop.GoRight();
 		}
 
 		#endregion // Methods
