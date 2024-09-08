@@ -4,8 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Interop;
-using VDManager.Utils.Enums;
-using VDManager.ViewModels;
 using VDManager.Views;
 
 namespace VDManager.Utils
@@ -18,16 +16,8 @@ namespace VDManager.Utils
 	{
 		#region Constants
 
-		private const int HOTKEY_ID_PAD1 = 9001;
-		private const int HOTKEY_ID_PAD2 = 9002;
-		private const int HOTKEY_ID_PAD3 = 9003;
-		private const int HOTKEY_ID_F1 = 9004;
-		private const int HOTKEY_ID_F2 = 9005;
-		private const int HOTKEY_ID_F3 = 9006;
-		private const int HOTKEY_ID_INSERT = 9007;
 		private const int HOTKEY_ID_ARROW_LEFT = 9008;
 		private const int HOTKEY_ID_ARROW_RIGHT = 9009;
-
 		private const int KEYEVENTF_EXTENDEDKEY = 1;
 		private const int KEYEVENTF_KEYUP = 2;
 
@@ -47,11 +37,93 @@ namespace VDManager.Utils
 			public System.Drawing.Rectangle rcNormalPosition;
 		}
 
-		#endregion // Struct
+        #endregion // Struct
 
-		#region DLL Imports
+        #region Enums
 
-		[DllImport("User32.dll")]
+        public enum KeysEnum
+        {
+            Left,
+            Right
+        }
+
+        public enum ShowWindowCommandEnum
+        {
+            /// <summary>
+            /// Hides the window and activates another window.
+            /// </summary>
+            Hide = 0,
+            /// <summary>
+            /// Activates and displays a window. If the window is minimized or 
+            /// maximized, the system restores it to its original size and position.
+            /// An application should specify this flag when displaying the window 
+            /// for the first time.
+            /// </summary>
+            Normal = 1,
+            /// <summary>
+            /// Activates the window and displays it as a minimized window.
+            /// </summary>
+            ShowMinimized = 2,
+            /// <summary>
+            /// Maximizes the specified window.
+            /// </summary>
+            Maximize = 3,
+            /// <summary>
+            /// Activates the window and displays it as a maximized window.
+            /// </summary>       
+            ShowMaximized = 3,
+            /// <summary>
+            /// Displays a window in its most recent size and position. This value 
+            /// is similar to <see cref="Win32.ShowWindowCommand.Normal"/>, except 
+            /// the window is not activated.
+            /// </summary>
+            ShowNoActivate = 4,
+            /// <summary>
+            /// Activates the window and displays it in its current size and position. 
+            /// </summary>
+            Show = 5,
+            /// <summary>
+            /// Minimizes the specified window and activates the next top-level 
+            /// window in the Z order.
+            /// </summary>
+            Minimize = 6,
+            /// <summary>
+            /// Displays the window as a minimized window. This value is similar to
+            /// <see cref="Win32.ShowWindowCommand.ShowMinimized"/>, except the 
+            /// window is not activated.
+            /// </summary>
+            ShowMinNoActive = 7,
+            /// <summary>
+            /// Displays the window in its current size and position. This value is 
+            /// similar to <see cref="Win32.ShowWindowCommand.Show"/>, except the 
+            /// window is not activated.
+            /// </summary>
+            ShowNA = 8,
+            /// <summary>
+            /// Activates and displays the window. If the window is minimized or 
+            /// maximized, the system restores it to its original size and position. 
+            /// An application should specify this flag when restoring a minimized window.
+            /// </summary>
+            Restore = 9,
+            /// <summary>
+            /// Sets the show state based on the SW_* value specified in the 
+            /// STARTUPINFO structure passed to the CreateProcess function by the 
+            /// program that started the application.
+            /// </summary>
+            ShowDefault = 10,
+            /// <summary>
+            ///  <b>Windows 2000/XP:</b> Minimizes a window, even if the thread 
+            /// that owns the window is not responding. This flag should only be 
+            /// used when minimizing windows from a different thread.
+            /// </summary>
+            ForceMinimize = 11
+        }
+
+        #endregion // Enums
+
+        #region DLL Imports
+
+        [DllImport("User32.dll")]
 		private static extern bool RegisterHotKey([In] IntPtr hWnd, [In] int id, [In] uint fsModifiers, [In] uint vk);
 
 		[DllImport("User32.dll")]
@@ -86,11 +158,6 @@ namespace VDManager.Utils
         public HwndSource Source { get; set; }
 
 		/// <summary>
-		/// The viewModel we want to bind on.
-		/// </summary>
-		public VDManagerViewModel ViewModel { get; set; }
-
-		/// <summary>
 		/// The mainwindow of the app.
 		/// </summary>
 		public MainWindow MainWindow { get; set; }
@@ -102,81 +169,15 @@ namespace VDManager.Utils
 		/// <summary>
 		/// <see cref="KeyUtil"/> constructor.
 		/// </summary>
-		/// <param name="viewModel">The viewModel to bind to.</param>
 		/// <param name="mainWindow">The main window of the app.</param>
-		public KeyUtil(VDManagerViewModel viewModel, MainWindow mainWindow)
+		public KeyUtil(MainWindow mainWindow)
 		{
-			ViewModel = viewModel;
 			MainWindow = mainWindow;
 		}
 
 		#endregion // Constructor
 
 		#region KeyManagement
-
-		/// <summary>
-		/// Register the toggle service key.
-		/// </summary>
-		public void RegisterToggleServiceKey()
-		{
-			var helper = new WindowInteropHelper(MainWindow);
-			const uint VK_INSERT = 0x2D;
-			const uint MOD_CTRL = 0;
-			if (!RegisterHotKey(helper.Handle, HOTKEY_ID_INSERT, MOD_CTRL, VK_INSERT))
-			{
-				throw new Exception($"Error with binding to Insert [{VK_INSERT}]");
-			}
-		}
-
-		/// <summary>
-		/// Register the number hotkeys.
-		/// </summary>
-		public void RegisterHotKeyF()
-		{
-			var helper = new WindowInteropHelper(MainWindow);
-			const uint VK_F1 = 0x70;
-			const uint VK_F2 = 0x71;
-			const uint VK_F3 = 0x72;
-			const uint MOD_CTRL = 0;
-
-			if (!RegisterHotKey(helper.Handle, HOTKEY_ID_F1, MOD_CTRL, VK_F1))
-			{
-				throw new Exception($"Error with binding to Number1 [{VK_F1}]");
-			}
-			if (!RegisterHotKey(helper.Handle, HOTKEY_ID_F2, MOD_CTRL, VK_F2))
-			{
-				throw new Exception($"Error with binding to Number2 [{VK_F2}]");
-			}
-			if (!RegisterHotKey(helper.Handle, HOTKEY_ID_F3, MOD_CTRL, VK_F3))
-			{
-				throw new Exception($"Error with binding to Number3 [{VK_F3}]");
-			}
-		}
-
-		/// <summary>
-		/// Register the numpad hotkeys.
-		/// </summary>
-		public void RegisterHotKeyNumPad()
-		{
-			var helper = new WindowInteropHelper(MainWindow);
-			const uint VK_NUMPAD1 = 0x61;
-			const uint VK_NUMPAD2 = 0x62;
-			const uint VK_NUMPAD3 = 0x63;
-			const uint MOD_CTRL = 0;
-			
-			if (!RegisterHotKey(helper.Handle, HOTKEY_ID_PAD1, MOD_CTRL, VK_NUMPAD1))
-			{
-				throw new Exception($"Error with binding to Numpad1 [{VK_NUMPAD1}]");
-			}
-			if (!RegisterHotKey(helper.Handle, HOTKEY_ID_PAD2, MOD_CTRL, VK_NUMPAD2))
-			{
-				throw new Exception($"Error with binding to Numpad2 [{VK_NUMPAD2}]");
-			}
-			if (!RegisterHotKey(helper.Handle, HOTKEY_ID_PAD3, MOD_CTRL, VK_NUMPAD3))
-			{
-				throw new Exception($"Error with binding to Numpad3 [{VK_NUMPAD3}]");
-			}
-		}
 
 		/// <summary>
 		/// Register the arrow hotkeys.
@@ -197,37 +198,6 @@ namespace VDManager.Utils
 			{
 				throw new Exception($"Error with binding to Arrow right [{VK_RIGHT}]");
 			}
-		}
-
-		/// <summary>
-		/// Unregister the numpad hotkeys.
-		/// </summary>
-		public void UnregisterToggleServiceKey()
-		{
-			var helper = new WindowInteropHelper(MainWindow);
-			UnregisterHotKey(helper.Handle, HOTKEY_ID_INSERT);
-		}
-
-		/// <summary>
-		/// Unregister the numpad hotkeys.
-		/// </summary>
-		public void UnregisterHotKeyNumPad()
-		{
-			var helper = new WindowInteropHelper(MainWindow);
-			UnregisterHotKey(helper.Handle, HOTKEY_ID_PAD1);
-			UnregisterHotKey(helper.Handle, HOTKEY_ID_PAD2);
-			UnregisterHotKey(helper.Handle, HOTKEY_ID_PAD3);
-		}
-
-		/// <summary>
-		/// Unregister the number hotkeys.
-		/// </summary>
-		public void UnregisterHotKeyF()
-		{
-			var helper = new WindowInteropHelper(MainWindow);
-			UnregisterHotKey(helper.Handle, HOTKEY_ID_F1);
-			UnregisterHotKey(helper.Handle, HOTKEY_ID_F2);
-			UnregisterHotKey(helper.Handle, HOTKEY_ID_F3);
 		}
 
 		/// <summary>
@@ -252,36 +222,6 @@ namespace VDManager.Utils
 				case WM_HOTKEY:
 					switch (wParam.ToInt32())
 					{
-						case HOTKEY_ID_PAD1:
-							OnHotKeyPressed(KeysEnum.Numpad1);
-							handled = true;
-							break;
-
-						case HOTKEY_ID_PAD2:
-							OnHotKeyPressed(KeysEnum.Numpad2);
-							handled = true;
-							break;
-
-						case HOTKEY_ID_PAD3:
-							OnHotKeyPressed(KeysEnum.Numpad3);
-							handled = true;
-							break;
-
-						case HOTKEY_ID_F1:
-							OnHotKeyPressed(KeysEnum.F1);
-							handled = true;
-							break;
-
-						case HOTKEY_ID_F2:
-							OnHotKeyPressed(KeysEnum.F2);
-							handled = true;
-							break;
-
-						case HOTKEY_ID_F3:
-							OnHotKeyPressed(KeysEnum.F3);
-							handled = true;
-							break;
-
 						case HOTKEY_ID_ARROW_LEFT:
 							OnHotKeyPressed(KeysEnum.Left);
 							handled = true;
@@ -289,11 +229,6 @@ namespace VDManager.Utils
 
 						case HOTKEY_ID_ARROW_RIGHT:
 							OnHotKeyPressed(KeysEnum.Right);
-							handled = true;
-							break;
-
-						case HOTKEY_ID_INSERT:
-							OnHotKeyPressed(KeysEnum.Insert);
 							handled = true;
 							break;
 					}
@@ -332,61 +267,16 @@ namespace VDManager.Utils
 		{
 			switch (key)
 			{
-				case KeysEnum.Numpad3:
-				case KeysEnum.F3:
-					IntPtr hwnd = GetForegroundWindow();
-					uint pid;
-					GetWindowThreadProcessId(hwnd, out pid);
-					Process process = Process.GetProcessById((int)pid);
-
-					if ((GetPlacement(process.MainWindowHandle).showCmd == ShowWindowCommandEnum.Normal
-					     || GetPlacement(process.MainWindowHandle).showCmd == ShowWindowCommandEnum.Maximize)
-					    && ViewModel.CurrentlyHiddenProcess == null)
-					{
-						if (process.ProcessName.ToLower().StartsWith("explorer")) return;
-						if (process.ProcessName.ToLower().StartsWith("VDManager")) return;
-
-						ViewModel.CurrentlyHiddenProcess = process;
-						ViewModel.PreviousStateBeforeHiding = GetPlacement(process.MainWindowHandle).showCmd;
-						ShowWindow(ViewModel.CurrentlyHiddenProcess.MainWindowHandle, (int)ShowWindowCommandEnum.Minimize);
-						return;
-					}
-					if (ViewModel.CurrentlyHiddenProcess != null)
-					{
-						ShowWindow(ViewModel.CurrentlyHiddenProcess.MainWindowHandle, (int)ViewModel.PreviousStateBeforeHiding);
-						ViewModel.CurrentlyHiddenProcess = null;
-					}
-					break;
-
-				case KeysEnum.Numpad1:
-				case KeysEnum.F1:
 				case KeysEnum.Left:
                     MainWindow.SwitchLeft();
 				    ManageGridSetters();
                     break;
 
-				case KeysEnum.Numpad2:
-				case KeysEnum.F2:
 				case KeysEnum.Right:
 					MainWindow.SwitchRight();
 				    ManageGridSetters();
                     break;
-
-				case KeysEnum.Insert:
-					ViewModel.AppStatus = ViewModel.AppStatus == "RUNNING" ? "STOPPED" : "RUNNING";
-					break;
 			}
-		}
-
-		/// <summary>
-		/// Get the window placement.
-		/// </summary>
-		private static Windowplacement GetPlacement(IntPtr hwnd)
-		{
-			Windowplacement placement = new Windowplacement();
-			placement.length = Marshal.SizeOf(placement);
-			GetWindowPlacement(hwnd, ref placement);
-			return placement;
 		}
 
 		/// <summary>

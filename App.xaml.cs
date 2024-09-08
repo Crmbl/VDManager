@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Windows;
-using VDManager.Utils;
-using VDManager.Utils.Interfaces;
+﻿using System.Windows;
 
 namespace VDManager
 {
@@ -10,14 +7,5 @@ namespace VDManager
     /// </summary>
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            RegisterInstance();
-        }
-
-        public static void RegisterInstance()
-        {
-            DependencyInjectionUtil.RegisterInstance<IDispatcher>(new Dispatcher(Thread.CurrentThread));
-        }
     }
 }

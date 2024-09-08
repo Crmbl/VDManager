@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -35,7 +35,11 @@
     <None Remove="Resources\Images\maximize.png" />
     <None Remove="Resources\Images\tabletOff.ico" />
     <None Remove="Resources\Images\tabletOn.ico" />
+    <None Remove="Resources\Images\toggleOff-dark.png" />
+    <None Remove="Resources\Images\toggleOff-light.png" />
     <None Remove="Resources\Images\toggleOff.png" />
+    <None Remove="Resources\Images\toggleOn-dark.png" />
+    <None Remove="Resources\Images\toggleOn-light.png" />
     <None Remove="Resources\Images\toggleOn.png" />
   </ItemGroup>
   <ItemGroup>
@@ -57,9 +61,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\3d.ico" />
-    <Resource Include="Resources\Images\background.png" />
-    <Resource Include="Resources\Images\tabletOff.ico" />
-    <Resource Include="Resources\Images\tabletOn.ico" />
+    <Resource Include="Resources\Images\toggleOff-dark.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\toggleOff-light.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\toggleOn-dark.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\toggleOn-light.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\vd.ico" />
@@ -68,28 +81,18 @@
     <Resource Include="vd.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".gitattributes" />
     <Content Include=".gitignore" />
     <Content Include="3d.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Images\exit.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Images\maximize.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Images\toggleOff.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Images\toggleOn.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <Resource Include="Resources\Images\exit.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="Unity" Version="5.11.10" />
+    <PackageReference Include="SystrayWindow" Version="1.0.9" />
   </ItemGroup>
 </Project>

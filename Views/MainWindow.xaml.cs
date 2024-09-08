@@ -1,55 +1,41 @@
 ﻿using System;
-using System.Drawing;
-using System.IO;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Forms;
-using System.Windows.Input;
+using System.Windows.Controls;
 using System.Windows.Interop;
 using VDManager.Utils;
-using VDManager.ViewModels;
-using static System.Windows.Application;
-using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
 namespace VDManager.Views
 {
-    /// <summary>
-    /// Logique d'interaction pour MainWindow.xaml
-    /// </summary>
     public partial class MainWindow
     {
-		#region Properties
-
-		/// <summary>
-	    /// Icon in the system tray.
-	    /// </summary>
-	    public NotifyIcon NotifyIcon { get; set; }
-
-	    /// <summary>
-	    /// <see cref="Utils.KeyUtil"/>.
-	    /// </summary>
-	    public KeyUtil KeyUtil { get; set; }
-
-		/// <summary>
-		/// The main viewmodel.
-		/// </summary>
-		private VDManagerViewModel ViewModel { get; }
-
-		#endregion // Properties
-
-		#region Constants
-
-	    /// <summary>
-	    /// Ref to the icon.
-	    /// </summary>
-	    private readonly Uri _iconOn = new Uri("pack://application:,,,/Resources/Images/3d.ico");
+        #region Properties
 
         /// <summary>
-        /// Ref to the icon.
+        /// Icon window in the system tray.
         /// </summary>
-        private readonly Uri _iconOff = new Uri("pack://application:,,,/Resources/Images/tabletOff.ico");
+        public SystrayWindow.SystrayWindow SystrayWindow { get; set; }
 
-        #endregion // Constants
+        /// <summary>
+        /// Toggle button.
+        /// </summary>
+        public Button ToggleButton { get; set; }
+
+        /// <summary>
+        /// <see cref="Utils.KeyUtil"/>.
+        /// </summary>
+        public KeyUtil KeyUtil { get; set; }
+
+		/// <summary>
+		/// Determines if running or not.
+		/// </summary>
+        public bool IsRunning { get; set; }
+
+        /// <summary>
+        /// Is using dark theme ?
+        /// </summary>
+        public bool IsDarkTheme { get; set; }
+
+        #endregion // Properties
 
         #region Constructor
 
@@ -60,47 +46,38 @@ namespace VDManager.Views
 	    {
 		    InitializeComponent();
 
-		    ViewModel = new VDManagerViewModel();
-		    ViewModel.CheckboxEvent += CheckboxChanged;
-		    KeyUtil = new KeyUtil(ViewModel, this);
+			IsRunning = true;
+		    KeyUtil = new KeyUtil(this);
 
-		    DataContext = ViewModel;
-
-            #region System Tray Icon
-
-            var resourceStream = GetResourceStream(_iconOn);
-		    if (resourceStream == null) return;
-
-		    Stream iconStream = resourceStream.Stream;
-		    NotifyIcon = new NotifyIcon
-		    {
-			    Icon = new Icon(iconStream, SystemInformation.SmallIconSize),
-			    Visible = false
-		    };
-		    iconStream.Dispose();
-
-		    NotifyIcon.DoubleClick += delegate
-		    {
-                //Show();
-                //WindowState = WindowState.Normal;
-                //NotifyIcon.Visible = false;
-
-                ViewModel.AppStatus = ViewModel.AppStatus == "RUNNING" ? "STOPPED" : "RUNNING";
+            IsDarkTheme = true;
+            SystrayWindow = new SystrayWindow.SystrayWindow(new Uri("pack://application:,,,/Resources/Images/3d.ico"), "VD Manager", IsDarkTheme, 150);
+            SystrayWindow.Show();
+            SystrayWindow.OverrideHide();
+            SystrayWindow.NotifyIcon.Visible = true;
+            SystrayWindow.NotifyIcon.DoubleClick += delegate
+            {
+                IsRunning = !IsRunning;
             };
 
-		    SetNotifyIconMenuItems();
+            SystrayWindow.AddButton("toggle", "Toggle OFF", new Uri($"pack://application:,,,/Resources/Images/toggleOff-{(IsDarkTheme ? "dark" : "light")}.png"));
+            SystrayWindow.AddButton("exit", "Exit", new Uri($"pack://application:,,,/Resources/Images/exit.png"));
 
-			#endregion // System Tray Icon
-		}
+            ToggleButton = SystrayWindow.GetButton("toggle")!;
+            ToggleButton.Click += ApplicationStatusTargetUpdated;
 
-		#endregion // Constructor
+            var exitButton = SystrayWindow.GetButton("exit");
+            if (exitButton != null)
+                exitButton.Click += ExitClick;
+        }
 
-		#region Methods
+        #endregion // Constructor
 
-		/// <summary>
-		/// Switch to the left virtual desktop.
-		/// </summary>
-		public void SwitchLeft()
+        #region Methods
+
+        /// <summary>
+        /// Switch to the left virtual desktop.
+        /// </summary>
+        public void SwitchLeft()
 		{
             if (Desktop.Count != 1)
                 VirtualDesktop.GoLeft();
@@ -126,7 +103,7 @@ namespace VDManager.Views
 	    {
 			if (WindowState == WindowState.Minimized)
 		    {
-			    NotifyIcon.Visible = true;
+                SystrayWindow.NotifyIcon.Visible = true;
 			    Hide();
 		    }
 
@@ -143,10 +120,10 @@ namespace VDManager.Views
 		    var helper = new WindowInteropHelper(this);
 		    KeyUtil.Source = HwndSource.FromHwnd(helper.Handle);
 		    KeyUtil.Source?.AddHook(KeyUtil.HwndHook);
-		    //KeyUtil.RegisterToggleServiceKey();
+            KeyUtil.RegisterHotKeyArrow();
 
             WindowState = WindowState.Minimized;
-            NotifyIcon.Visible = true;
+            SystrayWindow.NotifyIcon.Visible = true;
             Hide();
         }
 
@@ -157,144 +134,37 @@ namespace VDManager.Views
 	    {
 		    KeyUtil.Source.RemoveHook(KeyUtil.HwndHook);
 		    KeyUtil.Source = null;
-			KeyUtil.UnregisterHotKeyNumPad();
-			KeyUtil.UnregisterHotKeyF();
 			KeyUtil.UnregisterHotKeyArrow();
-			//KeyUtil.UnregisterToggleServiceKey();
-
-            ViewModel.CheckboxEvent -= CheckboxChanged;
 		    base.OnClosed(e);
-	    }
-
-	    /// <summary>
-	    /// Used to register/unregister the hotkeys.
-	    /// </summary>
-	    public void CheckboxChanged(object obj, EventArgs args)
-	    {
-		    KeyUtil.UnregisterHotKeyNumPad();
-		    KeyUtil.UnregisterHotKeyF();
-		    KeyUtil.UnregisterHotKeyArrow();
-
-		    if (ViewModel.AppStatus.Equals("STOPPED"))
-			    return;
-
-		    if (ViewModel.UseFKeys)
-			    KeyUtil.RegisterHotKeyF();
-		    if (ViewModel.UseNumPad)
-			    KeyUtil.RegisterHotKeyNumPad();
-		    if (ViewModel.UseArrows)
-			    KeyUtil.RegisterHotKeyArrow();
 	    }
 
 		/// <summary>
 		/// Used when the ApplicationStatus value is updated.
 		/// </summary>
-		private void ApplicationStatusTargetUpdated(object sender, DataTransferEventArgs e)
+		private void ApplicationStatusTargetUpdated(object sender, RoutedEventArgs e)
 		{
-			var isRunning = ViewModel.AppStatus == "RUNNING";
-
-			//var resourceStream = GetResourceStream(isRunning ? _iconOn : _iconOff);
-		 //   if (resourceStream == null) return;
-		 //   Stream iconStream = resourceStream.Stream;
-		 //   NotifyIcon.Icon = new Icon(iconStream);
-		 //   iconStream.Dispose();
-
-			if (isRunning)
+			SystrayWindow.Hide();
+			if (IsRunning)
 			{
-				SetNotifyIconMenuItems();
-
-                if (ViewModel.UseFKeys)
-				    KeyUtil.RegisterHotKeyF();
-			    if (ViewModel.UseNumPad)
-				    KeyUtil.RegisterHotKeyNumPad();
-			    if (ViewModel.UseArrows)
-				    KeyUtil.RegisterHotKeyArrow();
+                SystrayWindow.UpdateButton("toggle", "Toggle ON", new Uri($"pack://application:,,,/Resources/Images/toggleOn-{(IsDarkTheme ? "dark" : "light")}.png"));
+                KeyUtil.UnregisterHotKeyArrow();
             }
             else
 		    {
-			    SetNotifyIconMenuItems();
-
-				KeyUtil.UnregisterHotKeyNumPad();
-			    KeyUtil.UnregisterHotKeyF();
-			    KeyUtil.UnregisterHotKeyArrow();
+                SystrayWindow.UpdateButton("toggle", "Toggle OFF", new Uri($"pack://application:,,,/Resources/Images/toggleOff-{(IsDarkTheme ? "dark" : "light")}.png"));
+                KeyUtil.RegisterHotKeyArrow();
 			}
+            IsRunning = !IsRunning;
 	    }
 
-		/// <summary>
-		/// Event raised when the user click somewhere on the window and won't release click.
-		/// </summary>
-	    private void WindowMouseDown(object sender, MouseButtonEventArgs e)
-		{
-			Mouse.OverrideCursor = System.Windows.Input.Cursors.None;
-			if (e.ChangedButton == MouseButton.Left)
-			    DragMove();
-	    }
+        /// <summary>
+        /// Exit app on click and revert back to default settings.
+        /// </summary>
+        private void ExitClick(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
 
-		/// <summary>
-		/// Event raised when the user release the mouse click.
-		/// </summary>
-	    private void WindowMouseUp(object sender, MouseButtonEventArgs e)
-	    {
-		    Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
-		}
-
-		/// <summary>
-		/// Event raised when the mouse enter the window.
-		/// </summary>
-	    private void WindowMouseEnter(object sender, MouseEventArgs e)
-	    {
-			Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
-		}
-
-		/// <summary>
-		/// Event raised when the use double click on the window.
-		/// </summary>
-		private void WindowMouseDouble(object sender, MouseButtonEventArgs e)
-		{
-			if (WindowState == WindowState.Normal)
-				WindowState = WindowState.Minimized;
-		}
-
-		#endregion // Events
-
-		#region Methods
-
-		/// <summary>
-		/// Defines the NotifyIcon.ContextMenu.MenuItems.
-		/// </summary>
-	    public void SetNotifyIconMenuItems()
-	    {
-			if (NotifyIcon.ContextMenuStrip == null)
-				// TODO ContextMenu is no longer supported. Use ContextMenuStrip instead. For more details see https://docs.microsoft.com/en-us/dotnet/core/compatibility/winforms#removed-controls
-				NotifyIcon.ContextMenuStrip = new ContextMenuStrip();
-
-            //var bitmapMaximize = Bitmap.FromFile($"{AppDomain.CurrentDomain.BaseDirectory}\\Resources\\Images\\maximize.png");
-            var bitmapExit = Bitmap.FromFile($"{AppDomain.CurrentDomain.BaseDirectory}\\Resources\\Images\\exit.png");
-
-            NotifyIcon.Text = "VD Manager";
-			NotifyIcon.ContextMenuStrip.Items.Clear();
-			//NotifyIcon.ContextMenuStrip.Items.Add("Maximize", bitmapMaximize, (s, e) => { Show(); WindowState = WindowState.Normal; NotifyIcon.Visible = false; });
-
-            bool isRunning = ViewModel.AppStatus == "RUNNING";
-			if (isRunning)
-			{
-                var bitmapOff = Bitmap.FromFile($"{AppDomain.CurrentDomain.BaseDirectory}\\Resources\\Images\\toggleOff.png");
-                NotifyIcon.ContextMenuStrip.Items.Add("Toggle Off", bitmapOff, (s, e) => { ViewModel.AppStatus = "STOPPED"; });
-				bitmapOff = null;
-            }
-			else
-			{
-                var bitmapOn = Bitmap.FromFile($"{AppDomain.CurrentDomain.BaseDirectory}\\Resources\\Images\\toggleOn.png");
-                NotifyIcon.ContextMenuStrip.Items.Add("Toggle On", bitmapOn, (s, e) => { ViewModel.AppStatus = "RUNNING"; });
-				bitmapOn = null;
-            }
-
-		    NotifyIcon.ContextMenuStrip.Items.Add("Exit", bitmapExit, (s, e) => Current.Shutdown());
-
-            //bitmapMaximize = null;
-            bitmapExit = null;
-		}
-
-		#endregion // Methods
+        #endregion // Events
     }
 }
