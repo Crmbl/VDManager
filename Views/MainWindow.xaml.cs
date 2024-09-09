@@ -52,10 +52,7 @@ namespace VDManager.Views
             SystrayWindow.Show();
             SystrayWindow.OverrideHide();
             SystrayWindow.NotifyIcon.Visible = true;
-            SystrayWindow.NotifyIcon.DoubleClick += delegate
-            {
-                IsRunning = !IsRunning;
-            };
+            SystrayWindow.NotifyIcon.DoubleClick += delegate { ApplicationStatusTargetUpdated(new object(), new RoutedEventArgs()); };
 
             SystrayWindow.AddButton("toggle", "Toggle OFF", new Uri($"pack://application:,,,/Resources/Images/toggleOff-{(IsDarkTheme ? "dark" : "light")}.png"));
             SystrayWindow.AddButton("terminate", "Terminate", new Uri($"pack://application:,,,/Resources/Images/terminate.png"));
