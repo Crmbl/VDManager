@@ -31,10 +31,13 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\Images\3d.ico" />
+    <None Remove="Resources\Images\bomb-dark.png" />
+    <None Remove="Resources\Images\bomb-light.png" />
     <None Remove="Resources\Images\exit.png" />
     <None Remove="Resources\Images\maximize.png" />
     <None Remove="Resources\Images\tabletOff.ico" />
     <None Remove="Resources\Images\tabletOn.ico" />
+    <None Remove="Resources\Images\terminate.png" />
     <None Remove="Resources\Images\toggleOff-dark.png" />
     <None Remove="Resources\Images\toggleOff-light.png" />
     <None Remove="Resources\Images\toggleOff.png" />
@@ -61,6 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\3d.ico" />
+    <Resource Include="Resources\Images\terminate.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Images\toggleOff-dark.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
@@ -73,9 +79,6 @@
     <Resource Include="Resources\Images\toggleOn-light.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Images\vd.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="vd.ico" />

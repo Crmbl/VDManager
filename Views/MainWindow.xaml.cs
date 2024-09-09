@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using VDManager.Utils;
+using static VDManager.Utils.KeyUtil;
 
 namespace VDManager.Views
 {
@@ -14,11 +17,6 @@ namespace VDManager.Views
         /// Icon window in the system tray.
         /// </summary>
         public SystrayWindow.SystrayWindow SystrayWindow { get; set; }
-
-        /// <summary>
-        /// Toggle button.
-        /// </summary>
-        public Button ToggleButton { get; set; }
 
         /// <summary>
         /// <see cref="Utils.KeyUtil"/>.
@@ -60,14 +58,17 @@ namespace VDManager.Views
             };
 
             SystrayWindow.AddButton("toggle", "Toggle OFF", new Uri($"pack://application:,,,/Resources/Images/toggleOff-{(IsDarkTheme ? "dark" : "light")}.png"));
+            SystrayWindow.AddButton("terminate", "Terminate", new Uri($"pack://application:,,,/Resources/Images/terminate.png"));
             SystrayWindow.AddButton("exit", "Exit", new Uri($"pack://application:,,,/Resources/Images/exit.png"));
 
-            ToggleButton = SystrayWindow.GetButton("toggle")!;
-            ToggleButton.Click += ApplicationStatusTargetUpdated;
+            var toggleBtn = SystrayWindow.GetButton("toggle")!;
+            toggleBtn.Click += ApplicationStatusTargetUpdated;
+
+            var terminateBtn = SystrayWindow.GetButton("terminate")!;
+            terminateBtn.Click += Terminate;
 
             var exitButton = SystrayWindow.GetButton("exit");
-            if (exitButton != null)
-                exitButton.Click += ExitClick;
+            exitButton.Click += ExitClick;
         }
 
         #endregion // Constructor
@@ -156,6 +157,18 @@ namespace VDManager.Views
 			}
             IsRunning = !IsRunning;
 	    }
+
+        /// <summary>
+        /// Kill all instances of GridSetter and remove all virtual desktops
+        /// </summary>
+        private void Terminate(object sender, RoutedEventArgs e)
+        {
+            foreach (Process process in Process.GetProcesses().Where(x => x.ProcessName.ToLower().StartsWith("gridsetter")).ToList())
+                process.Kill();
+
+            Desktop.RemoveAll();
+            Application.Current.Shutdown();
+        }
 
         /// <summary>
         /// Exit app on click and revert back to default settings.
