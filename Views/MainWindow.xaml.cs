@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Interop;
 using VDManager.Utils;
-using static VDManager.Utils.KeyUtil;
 
 namespace VDManager.Views
 {
@@ -33,7 +32,19 @@ namespace VDManager.Views
         /// </summary>
         public bool IsDarkTheme { get; set; }
 
+        /// <summary>
+        /// Window used to steal the focus when GridSetter is launched.
+        /// </summary>
+        public OverlayWindow Overlay { get; set; }
+
         #endregion // Properties
+
+        #region DLL imports
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessageTimeout(IntPtr hWnd, uint Msg, UIntPtr wParam, IntPtr lParam, uint fuFlags, uint uTimeout, out IntPtr lpdwResult);
+
+        #endregion // DLL imports
 
         #region Constructor
 
@@ -55,6 +66,7 @@ namespace VDManager.Views
             SystrayWindow.NotifyIcon.DoubleClick += delegate { ApplicationStatusTargetUpdated(new object(), new RoutedEventArgs()); };
 
             SystrayWindow.AddButton("toggle", "Toggle OFF", new Uri($"pack://application:,,,/Resources/Images/toggleOff-{(IsDarkTheme ? "dark" : "light")}.png"));
+            SystrayWindow.AddButton("refreshTaskbar", "Refresh taskbar", new Uri($"pack://application:,,,/Resources/Images/reset-{(IsDarkTheme ? "dark" : "light")}.png"));
             SystrayWindow.AddButton("terminate", "Terminate", new Uri($"pack://application:,,,/Resources/Images/terminate.png"));
             SystrayWindow.AddButton("exit", "Exit", new Uri($"pack://application:,,,/Resources/Images/exit.png"));
 
@@ -64,8 +76,13 @@ namespace VDManager.Views
             var terminateBtn = SystrayWindow.GetButton("terminate")!;
             terminateBtn.Click += Terminate;
 
+            var refreshTaskbar = SystrayWindow.GetButton("refreshTaskbar");
+            refreshTaskbar.Click += RefreshTaskbar;
+
             var exitButton = SystrayWindow.GetButton("exit");
             exitButton.Click += ExitClick;
+
+            Overlay = new OverlayWindow();
         }
 
         #endregion // Constructor
@@ -89,6 +106,17 @@ namespace VDManager.Views
 			if (Desktop.Count != 1)
 				VirtualDesktop.GoRight();
 		}
+
+        public void ShowOverlay()
+        {
+            Overlay.Show();
+            Overlay.Activate();
+        }
+
+        public void HideOverlay()
+        {
+            Overlay.Hide();
+        }
 
 		#endregion // Methods
 
@@ -173,6 +201,29 @@ namespace VDManager.Views
         private void ExitClick(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        /// <summary>
+        /// Refresh taskbar on click
+        /// https://stackoverflow.com/questions/19736921/convert-c-code-to-c-sendmessagetimeout
+        /// https://www.reddit.com/r/Windows11/comments/12ygqei/how_can_i_refresh_the_taskbar_after_making_some/
+        /// </summary>
+        public void RefreshTaskbar(object sender, RoutedEventArgs e)
+        {
+            SystrayWindow.Hide();
+            
+            try
+            {
+                IntPtr result = IntPtr.Zero;
+                IntPtr setting = Marshal.StringToHGlobalUni("TraySettings");
+
+                var value = SendMessageTimeout(0xffff, 0x001A, 0, setting, 0x0002, 5000, out result);
+                Marshal.FreeHGlobal(setting);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         #endregion // Events

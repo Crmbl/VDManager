@@ -18,7 +18,9 @@ namespace VDManager.Utils
 
 		private const int HOTKEY_ID_ARROW_LEFT = 9008;
 		private const int HOTKEY_ID_ARROW_RIGHT = 9009;
-		private const int KEYEVENTF_EXTENDEDKEY = 1;
+		private const int HOTKEY_ID_ARROW_UP = 9006;
+		private const int HOTKEY_ID_ARROW_DOWN = 9007;
+        private const int KEYEVENTF_EXTENDEDKEY = 1;
 		private const int KEYEVENTF_KEYUP = 2;
 
 		#endregion // Constants
@@ -44,7 +46,9 @@ namespace VDManager.Utils
         public enum KeysEnum
         {
             Left,
-            Right
+            Right,
+			Up,
+			Down
         }
 
         public enum ShowWindowCommandEnum
@@ -188,7 +192,9 @@ namespace VDManager.Utils
 			var helper = new WindowInteropHelper(MainWindow);
 			const uint VK_LEFT = 0x25;
 			const uint VK_RIGHT = 0x27;
-			const uint MOD_CTRL = 0;
+			const uint VK_UP = 0x26;
+			const uint VK_DOWN = 0x28;
+            const uint MOD_CTRL = 0;
 
 			if (!RegisterHotKey(helper.Handle, HOTKEY_ID_ARROW_LEFT, MOD_CTRL, VK_LEFT))
 			{
@@ -198,7 +204,15 @@ namespace VDManager.Utils
 			{
 				throw new Exception($"Error with binding to Arrow right [{VK_RIGHT}]");
 			}
-		}
+            if (!RegisterHotKey(helper.Handle, HOTKEY_ID_ARROW_UP, MOD_CTRL, VK_UP))
+            {
+                throw new Exception($"Error with binding to Arrow up [{VK_UP}]");
+            }
+            if (!RegisterHotKey(helper.Handle, HOTKEY_ID_ARROW_DOWN, MOD_CTRL, VK_DOWN))
+            {
+                throw new Exception($"Error with binding to Arrow down [{VK_DOWN}]");
+            }
+        }
 
 		/// <summary>
 		/// Unregister the arrow hotkeys.
@@ -209,7 +223,9 @@ namespace VDManager.Utils
 			var helper = new WindowInteropHelper(MainWindow);
 			UnregisterHotKey(helper.Handle, HOTKEY_ID_ARROW_LEFT);
 			UnregisterHotKey(helper.Handle, HOTKEY_ID_ARROW_RIGHT);
-		}
+			UnregisterHotKey(helper.Handle, HOTKEY_ID_ARROW_UP);
+			UnregisterHotKey(helper.Handle, HOTKEY_ID_ARROW_DOWN);
+        }
 
 		/// <summary>
 		/// Hooks the key with a keypress event.
@@ -231,7 +247,17 @@ namespace VDManager.Utils
 							OnHotKeyPressed(KeysEnum.Right);
 							handled = true;
 							break;
-					}
+
+                        case HOTKEY_ID_ARROW_UP:
+                            OnHotKeyPressed(KeysEnum.Up);
+                            handled = true;
+                            break;
+
+                        case HOTKEY_ID_ARROW_DOWN:
+                            OnHotKeyPressed(KeysEnum.Down);
+                            handled = true;
+                            break;
+                    }
 					break;
 			}
 			return IntPtr.Zero;
@@ -262,19 +288,28 @@ namespace VDManager.Utils
 		/// <summary>
 		/// Main method to manage the macro system.
 		/// </summary>
-		/// <param name="key">The key pressed (num0 to num9).</param>
 		private void OnHotKeyPressed(KeysEnum key)
 		{
 			switch (key)
 			{
 				case KeysEnum.Left:
+                    MainWindow.HideOverlay();
                     MainWindow.SwitchLeft();
-				    ManageGridSetters();
+				    ManageGridSetters(MainWindow);
                     break;
 
 				case KeysEnum.Right:
-					MainWindow.SwitchRight();
-				    ManageGridSetters();
+                    MainWindow.HideOverlay();
+                    MainWindow.SwitchRight();
+				    ManageGridSetters(MainWindow);
+                    break;
+
+				case KeysEnum.Up:
+					MainWindow.ShowOverlay();
+                    break;
+
+				case KeysEnum.Down:
+                    MainWindow.HideOverlay();
                     break;
 			}
 		}
@@ -282,9 +317,10 @@ namespace VDManager.Utils
 		/// <summary>
         /// Allow the GridSetters to be hidden or restore when changing virtual desktop.
         /// </summary>
-	    private static void ManageGridSetters()
+	    private static void ManageGridSetters(MainWindow mainWindow)
 	    {
-			var processes = Process.GetProcesses();
+			var showOverlay = false;
+            var processes = Process.GetProcesses();
             var gridSetters = processes.Where(x => x.ProcessName.ToLower().StartsWith("gridsetter")).ToList();
             foreach (Process process in gridSetters)
             {
@@ -294,12 +330,19 @@ namespace VDManager.Utils
                     if (windowHandle == IntPtr.Zero)
                         return;
 
-                    if (VirtualDesktop.IsWindowOnCurrentVirtualDesktop(windowHandle))
+					if (VirtualDesktop.IsWindowOnCurrentVirtualDesktop(windowHandle))
+					{
                         ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Maximize);
+						showOverlay = true;
+                    }
                     else
                         ShowWindow(windowHandle, (int)ShowWindowCommandEnum.Minimize);
                 }
             }
+
+			//Show overlay if there are instances of GridSetter running to improve perf by losing focus
+			if (showOverlay)
+				mainWindow.ShowOverlay();
         }
 
         #endregion // Methods

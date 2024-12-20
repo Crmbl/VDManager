@@ -35,6 +35,8 @@
     <None Remove="Resources\Images\bomb-light.png" />
     <None Remove="Resources\Images\exit.png" />
     <None Remove="Resources\Images\maximize.png" />
+    <None Remove="Resources\Images\reset-dark.png" />
+    <None Remove="Resources\Images\reset-light.png" />
     <None Remove="Resources\Images\tabletOff.ico" />
     <None Remove="Resources\Images\tabletOn.ico" />
     <None Remove="Resources\Images\terminate.png" />
@@ -64,6 +66,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\3d.ico" />
+    <Resource Include="Resources\Images\reset-dark.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\reset-light.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Images\terminate.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
