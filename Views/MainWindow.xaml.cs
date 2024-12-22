@@ -118,6 +118,13 @@ namespace VDManager.Views
             Overlay.Hide();
         }
 
+        public void MoveOverlay()
+        {
+            var handle = new WindowInteropHelper(Overlay).Handle;
+            Desktop.Current.MoveWindow(handle);
+            Overlay.Activate();
+        }
+
 		#endregion // Methods
 
 		#region Events

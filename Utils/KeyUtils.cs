@@ -342,7 +342,12 @@ namespace VDManager.Utils
 
 			//Show overlay if there are instances of GridSetter running to improve perf by losing focus
 			if (showOverlay)
-				mainWindow.ShowOverlay();
+			{
+				if (mainWindow.Overlay.IsVisible)
+					mainWindow.MoveOverlay();
+				else
+					mainWindow.ShowOverlay();
+            }
         }
 
         #endregion // Methods
