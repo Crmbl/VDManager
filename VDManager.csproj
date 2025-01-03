@@ -101,9 +101,9 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="SystrayWindow" Version="1.0.13" />
+    <PackageReference Include="SystrayWindow" Version="1.0.16" />
   </ItemGroup>
 </Project>
