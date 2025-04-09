@@ -20,6 +20,9 @@ namespace VDManager.Utils
 		private const int HOTKEY_ID_ARROW_RIGHT = 9009;
 		private const int HOTKEY_ID_ARROW_UP = 9006;
 		private const int HOTKEY_ID_ARROW_DOWN = 9007;
+		private const int HOTKEY_ID_MACRO_ONE = 9010;
+		private const int HOTKEY_ID_MACRO_TWO = 9011;
+		private const int HOTKEY_ID_MACRO_THREE = 9012;
         private const int KEYEVENTF_EXTENDEDKEY = 1;
 		private const int KEYEVENTF_KEYUP = 2;
 
@@ -214,11 +217,43 @@ namespace VDManager.Utils
             }
         }
 
-		/// <summary>
-		/// Unregister the arrow hotkeys.
-		/// </summary>
-		/// <param name="window"></param>
-		public void UnregisterHotKeyArrow()
+
+        /// <summary>
+        /// Register the macro hotkeys.
+        /// </summary>
+        /// <param name="window"></param>
+        public void RegisterHotKeyMacro()
+        {
+            var helper = new WindowInteropHelper(MainWindow);
+
+            const uint MOD_CONTROL = 0x0002;
+            const uint MOD_SHIFT = 0x0004;
+            const uint MOD_WIN = 0x0008;
+            const uint VK_F5 = 0x74;
+            const uint VK_F6 = 0x75;
+            const uint VK_F7 = 0x76;
+
+            const uint MODIFIERS = MOD_CONTROL | MOD_SHIFT | MOD_WIN;
+
+            if (!RegisterHotKey(helper.Handle, HOTKEY_ID_MACRO_ONE, MODIFIERS, VK_F5))
+            {
+                throw new Exception($"Error with binding to F5 [{VK_F5}]");
+            }
+            if (!RegisterHotKey(helper.Handle, HOTKEY_ID_MACRO_TWO, MODIFIERS, VK_F6))
+            {
+                throw new Exception($"Error with binding to F6 [{VK_F6}]");
+            }
+            if (!RegisterHotKey(helper.Handle, HOTKEY_ID_MACRO_THREE, MODIFIERS, VK_F7))
+            {
+                throw new Exception($"Error with binding to F7 [{VK_F7}]");
+            }
+        }
+
+        /// <summary>
+        /// Unregister the arrow hotkeys.
+        /// </summary>
+        /// <param name="window"></param>
+        public void UnregisterHotKeyArrow()
 		{
 			var helper = new WindowInteropHelper(MainWindow);
 			UnregisterHotKey(helper.Handle, HOTKEY_ID_ARROW_LEFT);
@@ -227,10 +262,22 @@ namespace VDManager.Utils
 			UnregisterHotKey(helper.Handle, HOTKEY_ID_ARROW_DOWN);
         }
 
-		/// <summary>
-		/// Hooks the key with a keypress event.
-		/// </summary>
-		public IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        /// <summary>
+        /// Unregister the macro hotkeys.
+        /// </summary>
+        /// <param name="window"></param>
+        public void UnregisterHotKeyMacro()
+        {
+            var helper = new WindowInteropHelper(MainWindow);
+            UnregisterHotKey(helper.Handle, HOTKEY_ID_MACRO_ONE);
+            UnregisterHotKey(helper.Handle, HOTKEY_ID_MACRO_TWO);
+            UnregisterHotKey(helper.Handle, HOTKEY_ID_MACRO_THREE);
+        }
+
+        /// <summary>
+        /// Hooks the key with a keypress event.
+        /// </summary>
+        public IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
 		{
 			const int WM_HOTKEY = 0x0312;
 			switch (msg)
@@ -239,16 +286,19 @@ namespace VDManager.Utils
 					switch (wParam.ToInt32())
 					{
 						case HOTKEY_ID_ARROW_LEFT:
+                        case HOTKEY_ID_MACRO_ONE:
 							OnHotKeyPressed(KeysEnum.Left);
 							handled = true;
 							break;
 
 						case HOTKEY_ID_ARROW_RIGHT:
+                        case HOTKEY_ID_MACRO_THREE:
 							OnHotKeyPressed(KeysEnum.Right);
 							handled = true;
 							break;
 
                         case HOTKEY_ID_ARROW_UP:
+                        case HOTKEY_ID_MACRO_TWO:
                             OnHotKeyPressed(KeysEnum.Up);
                             handled = true;
                             break;

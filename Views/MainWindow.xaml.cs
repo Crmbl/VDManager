@@ -28,6 +28,11 @@ namespace VDManager.Views
         public bool IsRunning { get; set; }
 
         /// <summary>
+        /// Determines only macro keys.
+        /// </summary>
+        public bool OnlyMacro { get; set; }
+
+        /// <summary>
         /// Is using dark theme ?
         /// </summary>
         public bool IsDarkTheme { get; set; }
@@ -56,7 +61,8 @@ namespace VDManager.Views
 		    InitializeComponent();
 
 			IsRunning = true;
-		    KeyUtil = new KeyUtil(this);
+            OnlyMacro = false;
+            KeyUtil = new KeyUtil(this);
 
             IsDarkTheme = true;
             SystrayWindow = new SystrayWindow.SystrayWindow(new Uri("pack://application:,,,/Resources/Images/3d.ico"), "VD Manager", IsDarkTheme, 150);
@@ -66,12 +72,16 @@ namespace VDManager.Views
             SystrayWindow.NotifyIcon.DoubleClick += delegate { ApplicationStatusTargetUpdated(new object(), new RoutedEventArgs()); };
 
             SystrayWindow.AddButton("toggle", "Toggle OFF", new Uri($"pack://application:,,,/Resources/Images/toggleOff-{(IsDarkTheme ? "dark" : "light")}.png"));
+            SystrayWindow.AddButton("switch", "Only macros", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
             SystrayWindow.AddButton("refreshTaskbar", "Refresh taskbar", new Uri($"pack://application:,,,/Resources/Images/reset-{(IsDarkTheme ? "dark" : "light")}.png"));
             SystrayWindow.AddButton("terminate", "Terminate", new Uri($"pack://application:,,,/Resources/Images/terminate.png"));
             SystrayWindow.AddButton("exit", "Exit", new Uri($"pack://application:,,,/Resources/Images/exit.png"));
 
             var toggleBtn = SystrayWindow.GetButton("toggle")!;
             toggleBtn.Click += ApplicationStatusTargetUpdated;
+
+            var switchBtn = SystrayWindow.GetButton("switch")!;
+            switchBtn.Click += ToggleKeys;
 
             var terminateBtn = SystrayWindow.GetButton("terminate")!;
             terminateBtn.Click += Terminate;
@@ -153,6 +163,8 @@ namespace VDManager.Views
 		    var helper = new WindowInteropHelper(this);
 		    KeyUtil.Source = HwndSource.FromHwnd(helper.Handle);
 		    KeyUtil.Source?.AddHook(KeyUtil.HwndHook);
+
+            KeyUtil.RegisterHotKeyMacro();
             KeyUtil.RegisterHotKeyArrow();
 
             WindowState = WindowState.Minimized;
@@ -168,7 +180,8 @@ namespace VDManager.Views
 		    KeyUtil.Source.RemoveHook(KeyUtil.HwndHook);
 		    KeyUtil.Source = null;
 			KeyUtil.UnregisterHotKeyArrow();
-		    base.OnClosed(e);
+            KeyUtil.UnregisterHotKeyMacro();
+            base.OnClosed(e);
 	    }
 
 		/// <summary>
@@ -181,14 +194,32 @@ namespace VDManager.Views
 			{
                 SystrayWindow.UpdateButton("toggle", "Toggle ON", new Uri($"pack://application:,,,/Resources/Images/toggleOn-{(IsDarkTheme ? "dark" : "light")}.png"));
                 KeyUtil.UnregisterHotKeyArrow();
+                KeyUtil.UnregisterHotKeyMacro();
             }
             else
 		    {
                 SystrayWindow.UpdateButton("toggle", "Toggle OFF", new Uri($"pack://application:,,,/Resources/Images/toggleOff-{(IsDarkTheme ? "dark" : "light")}.png"));
+                KeyUtil.RegisterHotKeyMacro();
                 KeyUtil.RegisterHotKeyArrow();
 			}
             IsRunning = !IsRunning;
 	    }
+
+		private void ToggleKeys(object sender, RoutedEventArgs e)
+        {
+            SystrayWindow.Hide();
+            if (OnlyMacro)
+            {
+                SystrayWindow.UpdateButton("switch", "Only macros", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
+                KeyUtil.RegisterHotKeyArrow();
+            }
+            else
+            {
+                SystrayWindow.UpdateButton("switch", "All keys", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
+                KeyUtil.UnregisterHotKeyArrow();
+            }
+            OnlyMacro = !OnlyMacro;
+        }
 
         /// <summary>
         /// Kill all instances of GridSetter and remove all virtual desktops

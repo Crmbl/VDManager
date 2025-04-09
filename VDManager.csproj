@@ -34,6 +34,8 @@
     <None Remove="Resources\Images\bomb-dark.png" />
     <None Remove="Resources\Images\bomb-light.png" />
     <None Remove="Resources\Images\exit.png" />
+    <None Remove="Resources\Images\keyboard-dark.png" />
+    <None Remove="Resources\Images\keyboard-light.png" />
     <None Remove="Resources\Images\maximize.png" />
     <None Remove="Resources\Images\reset-dark.png" />
     <None Remove="Resources\Images\reset-light.png" />
@@ -66,6 +68,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\3d.ico" />
+    <Resource Include="Resources\Images\keyboard-dark.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\keyboard-light.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Images\reset-dark.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
