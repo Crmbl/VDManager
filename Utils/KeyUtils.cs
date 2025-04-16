@@ -343,15 +343,15 @@ namespace VDManager.Utils
 			switch (key)
 			{
 				case KeysEnum.Left:
-                    MainWindow.HideOverlay();
+                    //MainWindow.HideOverlay();
                     MainWindow.SwitchLeft();
-				    ManageGridSetters(MainWindow);
+                    ManageGridSetters(MainWindow);
                     break;
 
 				case KeysEnum.Right:
-                    MainWindow.HideOverlay();
+                    //MainWindow.HideOverlay();
                     MainWindow.SwitchRight();
-				    ManageGridSetters(MainWindow);
+                    ManageGridSetters(MainWindow);
                     break;
 
 				case KeysEnum.Up:
