@@ -131,7 +131,11 @@ namespace VDManager.Views
         public void MoveOverlay()
         {
             var handle = new WindowInteropHelper(Overlay).Handle;
-            Desktop.Current.MoveWindow(handle);
+            if (handle != IntPtr.Zero)
+                Desktop.Current.MoveWindow(handle);
+            else
+                Overlay.Show();
+
             Overlay.Activate();
         }
 

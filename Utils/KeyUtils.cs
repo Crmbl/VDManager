@@ -355,7 +355,7 @@ namespace VDManager.Utils
                     break;
 
 				case KeysEnum.Up:
-					MainWindow.ShowOverlay();
+                    MainWindow.MoveOverlay();
                     break;
 
 				case KeysEnum.Down:
