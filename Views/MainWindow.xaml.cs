@@ -93,6 +93,7 @@ namespace VDManager.Views
             exitButton.Click += ExitClick;
 
             Overlay = new OverlayWindow();
+            Overlay.Closed += OverlayClosed;
         }
 
         #endregion // Constructor
@@ -130,6 +131,13 @@ namespace VDManager.Views
 
         public void MoveOverlay()
         {
+            if (Overlay == null)
+            {
+                Overlay = new OverlayWindow();
+                Overlay.Closed += OverlayClosed;
+                return;
+            }
+
             var handle = new WindowInteropHelper(Overlay).Handle;
             if (handle != IntPtr.Zero)
                 Desktop.Current.MoveWindow(handle);
@@ -139,14 +147,19 @@ namespace VDManager.Views
             Overlay.Activate();
         }
 
-		#endregion // Methods
+        #endregion // Methods
 
-		#region Events
+        #region Events
 
-		/// <summary>
-		/// Event raised on state changed.
-		/// </summary>
-		protected override void OnStateChanged(EventArgs e)
+        private void OverlayClosed(object sender, EventArgs e)
+        {
+            Overlay = null;
+        }
+      
+        /// <summary>
+        /// Event raised on state changed.
+        /// </summary>
+        protected override void OnStateChanged(EventArgs e)
 	    {
 			if (WindowState == WindowState.Minimized)
 		    {
