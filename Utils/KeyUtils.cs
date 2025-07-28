@@ -20,9 +20,9 @@ namespace VDManager.Utils
 		private const int HOTKEY_ID_ARROW_RIGHT = 9009;
 		private const int HOTKEY_ID_ARROW_UP = 9006;
 		private const int HOTKEY_ID_ARROW_DOWN = 9007;
-		private const int HOTKEY_ID_MACRO_ONE = 9010;
-		private const int HOTKEY_ID_MACRO_TWO = 9011;
-		private const int HOTKEY_ID_MACRO_THREE = 9012;
+		private const int HOTKEY_ID_F19 = 9010;
+		private const int HOTKEY_ID_F20 = 9011;
+		private const int HOTKEY_ID_F21 = 9012;
         private const int KEYEVENTF_EXTENDEDKEY = 1;
 		private const int KEYEVENTF_KEYUP = 2;
 
@@ -200,53 +200,33 @@ namespace VDManager.Utils
             const uint MOD_CTRL = 0;
 
 			if (!RegisterHotKey(helper.Handle, HOTKEY_ID_ARROW_LEFT, MOD_CTRL, VK_LEFT))
-			{
 				throw new Exception($"Error with binding to Arrow left [{VK_LEFT}]");
-			}
 			if (!RegisterHotKey(helper.Handle, HOTKEY_ID_ARROW_RIGHT, MOD_CTRL, VK_RIGHT))
-			{
 				throw new Exception($"Error with binding to Arrow right [{VK_RIGHT}]");
-			}
             if (!RegisterHotKey(helper.Handle, HOTKEY_ID_ARROW_UP, MOD_CTRL, VK_UP))
-            {
                 throw new Exception($"Error with binding to Arrow up [{VK_UP}]");
-            }
             if (!RegisterHotKey(helper.Handle, HOTKEY_ID_ARROW_DOWN, MOD_CTRL, VK_DOWN))
-            {
                 throw new Exception($"Error with binding to Arrow down [{VK_DOWN}]");
-            }
         }
 
 
         /// <summary>
-        /// Register the macro hotkeys.
+        /// Register the function hotkeys.
         /// </summary>
         /// <param name="window"></param>
-        public void RegisterHotKeyMacro()
+        public void RegisterHotKeyFunctions()
         {
             var helper = new WindowInteropHelper(MainWindow);
+            const uint VK_F19 = 0x82;
+            const uint VK_F20 = 0x83;
+            const uint VK_F21 = 0x84;
 
-            const uint MOD_CONTROL = 0x0002;
-            const uint MOD_SHIFT = 0x0004;
-            const uint MOD_WIN = 0x0008;
-            const uint VK_F5 = 0x74;
-            const uint VK_F6 = 0x75;
-            const uint VK_F7 = 0x76;
-
-            const uint MODIFIERS = MOD_CONTROL | MOD_SHIFT | MOD_WIN;
-
-            if (!RegisterHotKey(helper.Handle, HOTKEY_ID_MACRO_ONE, MODIFIERS, VK_F5))
-            {
-                throw new Exception($"Error with binding to F5 [{VK_F5}]");
-            }
-            if (!RegisterHotKey(helper.Handle, HOTKEY_ID_MACRO_TWO, MODIFIERS, VK_F6))
-            {
-                throw new Exception($"Error with binding to F6 [{VK_F6}]");
-            }
-            if (!RegisterHotKey(helper.Handle, HOTKEY_ID_MACRO_THREE, MODIFIERS, VK_F7))
-            {
-                throw new Exception($"Error with binding to F7 [{VK_F7}]");
-            }
+            if (!RegisterHotKey(helper.Handle, HOTKEY_ID_F19, 0, VK_F19))
+                throw new Exception($"Error with binding to F19 [{VK_F19}]");
+            if (!RegisterHotKey(helper.Handle, HOTKEY_ID_F20, 0, VK_F20))
+                throw new Exception($"Error with binding to F20 [{VK_F20}]");
+            if (!RegisterHotKey(helper.Handle, HOTKEY_ID_F21, 0, VK_F21))
+                throw new Exception($"Error with binding to F21 [{VK_F21}]");
         }
 
         /// <summary>
@@ -263,15 +243,15 @@ namespace VDManager.Utils
         }
 
         /// <summary>
-        /// Unregister the macro hotkeys.
+        /// Unregister the function hotkeys.
         /// </summary>
         /// <param name="window"></param>
-        public void UnregisterHotKeyMacro()
+        public void UnregisterHotKeyFunctions()
         {
             var helper = new WindowInteropHelper(MainWindow);
-            UnregisterHotKey(helper.Handle, HOTKEY_ID_MACRO_ONE);
-            UnregisterHotKey(helper.Handle, HOTKEY_ID_MACRO_TWO);
-            UnregisterHotKey(helper.Handle, HOTKEY_ID_MACRO_THREE);
+            UnregisterHotKey(helper.Handle, HOTKEY_ID_F19);
+            UnregisterHotKey(helper.Handle, HOTKEY_ID_F20);
+            UnregisterHotKey(helper.Handle, HOTKEY_ID_F21);
         }
 
         /// <summary>
@@ -286,19 +266,19 @@ namespace VDManager.Utils
 					switch (wParam.ToInt32())
 					{
 						case HOTKEY_ID_ARROW_LEFT:
-                        case HOTKEY_ID_MACRO_ONE:
+                        case HOTKEY_ID_F19:
 							OnHotKeyPressed(KeysEnum.Left);
 							handled = true;
 							break;
 
 						case HOTKEY_ID_ARROW_RIGHT:
-                        case HOTKEY_ID_MACRO_THREE:
+                        case HOTKEY_ID_F21:
 							OnHotKeyPressed(KeysEnum.Right);
 							handled = true;
 							break;
 
                         case HOTKEY_ID_ARROW_UP:
-                        case HOTKEY_ID_MACRO_TWO:
+                        case HOTKEY_ID_F20:
                             OnHotKeyPressed(KeysEnum.Up);
                             handled = true;
                             break;

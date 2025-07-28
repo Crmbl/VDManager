@@ -28,9 +28,9 @@ namespace VDManager.Views
         public bool IsRunning { get; set; }
 
         /// <summary>
-        /// Determines only macro keys.
+        /// Determines only function keys.
         /// </summary>
-        public bool OnlyMacro { get; set; }
+        public bool OnlyFunction { get; set; }
 
         /// <summary>
         /// Is using dark theme ?
@@ -61,7 +61,7 @@ namespace VDManager.Views
 		    InitializeComponent();
 
 			IsRunning = true;
-            OnlyMacro = false;
+            OnlyFunction = false;
             KeyUtil = new KeyUtil(this);
 
             IsDarkTheme = true;
@@ -72,7 +72,7 @@ namespace VDManager.Views
             SystrayWindow.NotifyIcon.DoubleClick += delegate { ApplicationStatusTargetUpdated(new object(), new RoutedEventArgs()); };
 
             SystrayWindow.AddButton("toggle", "Toggle OFF", new Uri($"pack://application:,,,/Resources/Images/toggleOff-{(IsDarkTheme ? "dark" : "light")}.png"));
-            SystrayWindow.AddButton("switch", "Only macros", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
+            SystrayWindow.AddButton("switch", "Only functions", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
             SystrayWindow.AddButton("refreshTaskbar", "Refresh taskbar", new Uri($"pack://application:,,,/Resources/Images/reset-{(IsDarkTheme ? "dark" : "light")}.png"));
             SystrayWindow.AddButton("terminate", "Terminate", new Uri($"pack://application:,,,/Resources/Images/terminate.png"));
             SystrayWindow.AddButton("exit", "Exit", new Uri($"pack://application:,,,/Resources/Images/exit.png"));
@@ -181,7 +181,7 @@ namespace VDManager.Views
 		    KeyUtil.Source = HwndSource.FromHwnd(helper.Handle);
 		    KeyUtil.Source?.AddHook(KeyUtil.HwndHook);
 
-            KeyUtil.RegisterHotKeyMacro();
+            KeyUtil.RegisterHotKeyFunctions();
             KeyUtil.RegisterHotKeyArrow();
 
             WindowState = WindowState.Minimized;
@@ -197,7 +197,7 @@ namespace VDManager.Views
 		    KeyUtil.Source.RemoveHook(KeyUtil.HwndHook);
 		    KeyUtil.Source = null;
 			KeyUtil.UnregisterHotKeyArrow();
-            KeyUtil.UnregisterHotKeyMacro();
+            KeyUtil.UnregisterHotKeyFunctions();
             base.OnClosed(e);
 	    }
 
@@ -211,12 +211,12 @@ namespace VDManager.Views
 			{
                 SystrayWindow.UpdateButton("toggle", "Toggle ON", new Uri($"pack://application:,,,/Resources/Images/toggleOn-{(IsDarkTheme ? "dark" : "light")}.png"));
                 KeyUtil.UnregisterHotKeyArrow();
-                KeyUtil.UnregisterHotKeyMacro();
+                KeyUtil.UnregisterHotKeyFunctions();
             }
             else
 		    {
                 SystrayWindow.UpdateButton("toggle", "Toggle OFF", new Uri($"pack://application:,,,/Resources/Images/toggleOff-{(IsDarkTheme ? "dark" : "light")}.png"));
-                KeyUtil.RegisterHotKeyMacro();
+                KeyUtil.RegisterHotKeyFunctions();
                 KeyUtil.RegisterHotKeyArrow();
 			}
             IsRunning = !IsRunning;
@@ -225,9 +225,9 @@ namespace VDManager.Views
 		private void ToggleKeys(object sender, RoutedEventArgs e)
         {
             SystrayWindow.Hide();
-            if (OnlyMacro)
+            if (OnlyFunction)
             {
-                SystrayWindow.UpdateButton("switch", "Only macros", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
+                SystrayWindow.UpdateButton("switch", "Only functions", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
                 KeyUtil.RegisterHotKeyArrow();
             }
             else
@@ -235,7 +235,7 @@ namespace VDManager.Views
                 SystrayWindow.UpdateButton("switch", "All keys", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
                 KeyUtil.UnregisterHotKeyArrow();
             }
-            OnlyMacro = !OnlyMacro;
+            OnlyFunction = !OnlyFunction;
         }
 
         /// <summary>
