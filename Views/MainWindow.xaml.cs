@@ -30,7 +30,7 @@ namespace VDManager.Views
         /// <summary>
         /// Determines only function keys.
         /// </summary>
-        public bool OnlyFunction { get; set; }
+        //public bool OnlyFunction { get; set; }
 
         /// <summary>
         /// Is using dark theme ?
@@ -61,7 +61,7 @@ namespace VDManager.Views
 		    InitializeComponent();
 
 			IsRunning = true;
-            OnlyFunction = false;
+            //OnlyFunction = false;
             KeyUtil = new KeyUtil(this);
 
             IsDarkTheme = true;
@@ -72,7 +72,7 @@ namespace VDManager.Views
             SystrayWindow.NotifyIcon.DoubleClick += delegate { ApplicationStatusTargetUpdated(new object(), new RoutedEventArgs()); };
 
             SystrayWindow.AddButton("toggle", "Toggle OFF", new Uri($"pack://application:,,,/Resources/Images/toggleOff-{(IsDarkTheme ? "dark" : "light")}.png"));
-            SystrayWindow.AddButton("switch", "Only functions", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
+            //SystrayWindow.AddButton("switch", "Only functions", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
             SystrayWindow.AddButton("refreshTaskbar", "Refresh taskbar", new Uri($"pack://application:,,,/Resources/Images/reset-{(IsDarkTheme ? "dark" : "light")}.png"));
             SystrayWindow.AddButton("terminate", "Terminate", new Uri($"pack://application:,,,/Resources/Images/terminate.png"));
             SystrayWindow.AddButton("exit", "Exit", new Uri($"pack://application:,,,/Resources/Images/exit.png"));
@@ -80,8 +80,8 @@ namespace VDManager.Views
             var toggleBtn = SystrayWindow.GetButton("toggle")!;
             toggleBtn.Click += ApplicationStatusTargetUpdated;
 
-            var switchBtn = SystrayWindow.GetButton("switch")!;
-            switchBtn.Click += ToggleKeys;
+            //var switchBtn = SystrayWindow.GetButton("switch")!;
+            //switchBtn.Click += ToggleKeys;
 
             var terminateBtn = SystrayWindow.GetButton("terminate")!;
             terminateBtn.Click += Terminate;
@@ -222,21 +222,21 @@ namespace VDManager.Views
             IsRunning = !IsRunning;
 	    }
 
-		private void ToggleKeys(object sender, RoutedEventArgs e)
-        {
-            SystrayWindow.Hide();
-            if (OnlyFunction)
-            {
-                SystrayWindow.UpdateButton("switch", "Only functions", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
-                KeyUtil.RegisterHotKeyArrow();
-            }
-            else
-            {
-                SystrayWindow.UpdateButton("switch", "All keys", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
-                KeyUtil.UnregisterHotKeyArrow();
-            }
-            OnlyFunction = !OnlyFunction;
-        }
+        //private void ToggleKeys(object sender, RoutedEventArgs e)
+        //{
+        //    SystrayWindow.Hide();
+        //    if (OnlyFunction)
+        //    {
+        //        SystrayWindow.UpdateButton("switch", "Only functions", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
+        //        KeyUtil.RegisterHotKeyArrow();
+        //    }
+        //    else
+        //    {
+        //        SystrayWindow.UpdateButton("switch", "All keys", new Uri($"pack://application:,,,/Resources/Images/keyboard-{(IsDarkTheme ? "dark" : "light")}.png"));
+        //        KeyUtil.UnregisterHotKeyArrow();
+        //    }
+        //    OnlyFunction = !OnlyFunction;
+        //}
 
         /// <summary>
         /// Kill all instances of GridSetter and remove all virtual desktops
