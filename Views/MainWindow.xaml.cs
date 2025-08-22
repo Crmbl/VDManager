@@ -181,7 +181,7 @@ namespace VDManager.Views
 		    KeyUtil.Source = HwndSource.FromHwnd(helper.Handle);
 		    KeyUtil.Source?.AddHook(KeyUtil.HwndHook);
 
-            KeyUtil.RegisterHotKeyFunctions();
+            //KeyUtil.RegisterHotKeyFunctions();
             KeyUtil.RegisterHotKeyArrow();
 
             WindowState = WindowState.Minimized;
@@ -197,7 +197,7 @@ namespace VDManager.Views
 		    KeyUtil.Source.RemoveHook(KeyUtil.HwndHook);
 		    KeyUtil.Source = null;
 			KeyUtil.UnregisterHotKeyArrow();
-            KeyUtil.UnregisterHotKeyFunctions();
+            //KeyUtil.UnregisterHotKeyFunctions();
             base.OnClosed(e);
 	    }
 
@@ -211,12 +211,12 @@ namespace VDManager.Views
 			{
                 SystrayWindow.UpdateButton("toggle", "Toggle ON", new Uri($"pack://application:,,,/Resources/Images/toggleOn-{(IsDarkTheme ? "dark" : "light")}.png"));
                 KeyUtil.UnregisterHotKeyArrow();
-                KeyUtil.UnregisterHotKeyFunctions();
+                //KeyUtil.UnregisterHotKeyFunctions();
             }
             else
 		    {
                 SystrayWindow.UpdateButton("toggle", "Toggle OFF", new Uri($"pack://application:,,,/Resources/Images/toggleOff-{(IsDarkTheme ? "dark" : "light")}.png"));
-                KeyUtil.RegisterHotKeyFunctions();
+                //KeyUtil.RegisterHotKeyFunctions();
                 KeyUtil.RegisterHotKeyArrow();
 			}
             IsRunning = !IsRunning;
